@@ -3,14 +3,15 @@ import javax.swing.JFrame;
 public class Checkers extends JFrame {
 
     public Checkers() {
-        add(new Board());
+        
         setTitle("Checkers");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setUndecorated(true);
-        setSize(800, 600);//806,629
+        setSize(800, 600);
         setLocationRelativeTo(null);
+        setResizable(false); 
+        add(new Board());
         setVisible(true);
-        setResizable(false);
     }
     public static void main(String[] args) {
         new Checkers();
