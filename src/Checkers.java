@@ -6,7 +6,8 @@ public class Checkers extends JFrame {
         add(new Board());
         setTitle("Checkers");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(806, 629);
+        setUndecorated(true);
+        setSize(800, 600);//806,629
         setLocationRelativeTo(null);
         setVisible(true);
         setResizable(false);

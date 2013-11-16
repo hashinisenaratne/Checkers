@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 
 public class Board extends JPanel {
     
-    Image boardImg, blackchipImg, redchipImg;
+    Image boardImg, blackchipImg, redchipImg, crownImg;
     Chip[] blackchips;
     Chip[] redchips;
     
@@ -20,6 +20,8 @@ public class Board extends JPanel {
         blackchipImg = blackchipIcon.getImage();
         ImageIcon redchipIcon = new ImageIcon(this.getClass().getResource("redchip.png"));
         redchipImg = redchipIcon.getImage();
+        ImageIcon crownIcon = new ImageIcon(this.getClass().getResource("crown.png"));
+        crownImg = crownIcon.getImage();
         blackchips = new Chip[12];
         redchips = new Chip[12];
         for(int i = 0; i < 12; i++){
@@ -34,7 +36,11 @@ public class Board extends JPanel {
         updateChipInfo();
         for(int i = 0;i<12;i++){
             g2d.drawImage(redchipImg, pixelXPos(redchips[i].col, redchips[i].row), pixelYPos(redchips[i].row), null);
+            if(redchips[i].isKing)
+                g2d.drawImage(crownImg, pixelXPos(redchips[i].col, redchips[i].row), pixelYPos(redchips[i].row), null);
             g2d.drawImage(blackchipImg, pixelXPos(blackchips[i].col,redchips[i].row), pixelYPos(blackchips[i].row), null);
+            if(blackchips[i].isKing)
+                g2d.drawImage(crownImg, pixelXPos(blackchips[i].col,redchips[i].row), pixelYPos(blackchips[i].row), null);
         }
     }
     
@@ -54,11 +60,12 @@ public class Board extends JPanel {
 
 class Chip{
     int col, row;
-    boolean onBoard;
+    boolean onBoard, isKing;
     
     public Chip(int col, int row){
         this.col = col;
         this.row = row;
         onBoard = true;
+        isKing = false;
     }
 }
