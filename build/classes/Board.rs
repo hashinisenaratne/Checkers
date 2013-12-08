@@ -1,3 +1,0 @@
-StartAction
-Board
-Chip
