@@ -4,6 +4,9 @@
  */
 package Logic;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  *
  * @author user
@@ -13,13 +16,18 @@ public class CheckerBoard {
     private char[][] checkersBoard;
     private int boardSize;
     private char typeR,typeB,empty;
-
+    private List<Chip> typeRList;
+    private List<Chip> typeBList;
+    
+    
     public CheckerBoard(int size) {
         boardSize = size;
         checkersBoard = new char[boardSize][boardSize];
         typeR='r';
         typeB='b';
         empty='_';
+        typeRList=new LinkedList<Chip>();
+        typeBList=new LinkedList<Chip>();
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
                 if ((i + j) % 2 == 0) {
@@ -36,6 +44,7 @@ public class CheckerBoard {
             }
             while (j < boardSize) {
                 checkersBoard[i][j] = typeR;    //RED piece
+                typeRList.add(new Chip(j, i));
                 j += 2;
             }
         }
@@ -48,6 +57,7 @@ public class CheckerBoard {
             }
             while (j < boardSize) {
                 checkersBoard[i][j] = typeB;     //BLACK piece
+                typeBList.add(new Chip(j, i));
                 j += 2;
             }
         }
@@ -73,11 +83,24 @@ public class CheckerBoard {
             char tmpType = checkersBoard[sRow][sCol];
             checkersBoard[sRow][sCol] = empty;
             checkersBoard[dRow][dCol] = tmpType;
+            if(tmpType==typeR){
+                Chip tmpChip=typeRList.get(typeRList.indexOf(new Chip(sCol, sRow)));
+                tmpChip.setCol(dCol);
+                tmpChip.setRow(dRow);
+            }
+            if(tmpType==typeB){
+                Chip tmpChip=typeBList.get(typeBList.indexOf(new Chip(sCol, sRow)));
+                tmpChip.setCol(dCol);
+                tmpChip.setRow(dRow);
+            }
+            
             if (tmpType == typeR && dRow == boardSize - 1) {
-                checkersBoard[dRow][dCol] = Character.toUpperCase(typeR);     //uppercase typeR to represent RED QUEEN                
+                checkersBoard[dRow][dCol] = Character.toUpperCase(typeR);     //uppercase typeR to represent RED QUEEN 
+                typeRList.get(typeRList.indexOf(new Chip(dCol, dRow))).setIsKing(true);
             }
             if (tmpType == typeB && dRow == 0) {
                 checkersBoard[dRow][dCol] = Character.toUpperCase(typeB);     //uppercase typeB to represent BLACK QUEEN
+                typeBList.get(typeBList.indexOf(new Chip(dCol, dRow))).setIsKing(true);
             }
             return true;
         }
@@ -127,11 +150,23 @@ public class CheckerBoard {
             if (attackerRow > victimRow) {
                 if (isMoveable(attackerRow, attackerCol, victimRow - 1, victimCol - 1)) {
                     checkersBoard[victimRow][victimCol] = empty;
+                    if(tmpVictim==typeR){
+                        typeRList.get(typeRList.indexOf(new Chip(victimCol, victimRow))).setOnBoard(false);
+                    }
+                    if(tmpVictim==typeB){
+                        typeBList.get(typeBList.indexOf(new Chip(victimCol, victimRow))).setOnBoard(false);
+                    }
                     movePiece(attackerRow, attackerCol, victimRow - 1, victimCol - 1);
                     return true;
                 }
                 if (isMoveable(attackerRow, attackerCol, victimRow - 1, victimCol + 1)) {
                     checkersBoard[victimRow][victimCol] = empty;
+                    if(tmpVictim==typeR){
+                        typeRList.get(typeRList.indexOf(new Chip(victimCol, victimRow))).setOnBoard(false);
+                    }
+                    if(tmpVictim==typeB){
+                        typeBList.get(typeBList.indexOf(new Chip(victimCol, victimRow))).setOnBoard(false);
+                    }
                     movePiece(attackerRow, attackerCol, victimRow - 1, victimCol + 1);
                     return true;
                 }
@@ -139,11 +174,23 @@ public class CheckerBoard {
             if (attackerRow < victimRow) {
                 if (isMoveable(attackerRow, attackerCol, victimRow + 1, victimCol - 1)) {
                     checkersBoard[victimRow][victimCol] = empty;
+                    if(tmpVictim==typeR){
+                        typeRList.get(typeRList.indexOf(new Chip(victimCol, victimRow))).setOnBoard(false);
+                    }
+                    if(tmpVictim==typeB){
+                        typeBList.get(typeBList.indexOf(new Chip(victimCol, victimRow))).setOnBoard(false);
+                    }
                     movePiece(attackerRow, attackerCol, victimRow + 1, victimCol - 1);
                     return true;
                 }
                 if (isMoveable(attackerRow, attackerCol, victimRow + 1, victimCol + 1)) {
                     checkersBoard[victimRow][victimCol] = empty;
+                    if(tmpVictim==typeR){
+                        typeRList.get(typeRList.indexOf(new Chip(victimCol, victimRow))).setOnBoard(false);
+                    }
+                    if(tmpVictim==typeB){
+                        typeBList.get(typeBList.indexOf(new Chip(victimCol, victimRow))).setOnBoard(false);
+                    }
                     movePiece(attackerRow, attackerCol, victimRow + 1, victimCol + 1);
                     return true;
                 }
@@ -186,4 +233,13 @@ public class CheckerBoard {
     public int getSize(){
         return boardSize;
     }
+
+    public List<Chip> getTypeRList() {
+        return typeRList;
+    }
+
+    public List<Chip> getTypeBList() {
+        return typeBList;
+    }
+    
 }

@@ -4,7 +4,7 @@ import View.BoardPanel;
 import javax.swing.JFrame;
 
 public class CheckersFrame extends JFrame {
-    BoardPanel panel;
+    public BoardPanel panel;
     public CheckersFrame(Logic.CheckerBoard cb) {
         panel=new BoardPanel(cb);
         add(panel);
