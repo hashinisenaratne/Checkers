@@ -4,6 +4,7 @@
  */
 package Logic;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,19 +16,18 @@ public class CheckerBoard {
 
     private char[][] checkersBoard;
     private int boardSize;
-    private char typeR,typeB,empty;
+    private char typeR, typeB, empty;
     private List<Chip> typeRList;
     private List<Chip> typeBList;
-    
-    
+
     public CheckerBoard(int size) {
         boardSize = size;
         checkersBoard = new char[boardSize][boardSize];
-        typeR='r';
-        typeB='b';
-        empty='_';
-        typeRList=new LinkedList<Chip>();
-        typeBList=new LinkedList<Chip>();
+        typeR = 'r';
+        typeB = 'b';
+        empty = '_';
+        typeRList = new LinkedList<Chip>();
+        typeBList = new LinkedList<Chip>();
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
                 if ((i + j) % 2 == 0) {
@@ -83,17 +83,17 @@ public class CheckerBoard {
             char tmpType = checkersBoard[sRow][sCol];
             checkersBoard[sRow][sCol] = empty;
             checkersBoard[dRow][dCol] = tmpType;
-            if(tmpType==typeR){
-                Chip tmpChip=typeRList.get(typeRList.indexOf(new Chip(sCol, sRow)));
+            if (tmpType == typeR) {
+                Chip tmpChip = typeRList.get(typeRList.indexOf(new Chip(sCol, sRow)));
                 tmpChip.setCol(dCol);
                 tmpChip.setRow(dRow);
             }
-            if(tmpType==typeB){
-                Chip tmpChip=typeBList.get(typeBList.indexOf(new Chip(sCol, sRow)));
+            if (tmpType == typeB) {
+                Chip tmpChip = typeBList.get(typeBList.indexOf(new Chip(sCol, sRow)));
                 tmpChip.setCol(dCol);
                 tmpChip.setRow(dRow);
             }
-            
+
             if (tmpType == typeR && dRow == boardSize - 1) {
                 checkersBoard[dRow][dCol] = Character.toUpperCase(typeR);     //uppercase typeR to represent RED QUEEN 
                 typeRList.get(typeRList.indexOf(new Chip(dCol, dRow))).setIsKing(true);
@@ -131,6 +131,10 @@ public class CheckerBoard {
                     return false;
                 }
             }
+            if (Math.abs(dCol - sCol) > 2 || Math.abs(dRow - sRow) > 2) {
+                //not allowing too long moves
+                return false;
+            }
             return true;
         }
         return false;
@@ -150,10 +154,10 @@ public class CheckerBoard {
             if (attackerRow > victimRow) {
                 if (isMoveable(attackerRow, attackerCol, victimRow - 1, victimCol - 1)) {
                     checkersBoard[victimRow][victimCol] = empty;
-                    if(tmpVictim==typeR){
+                    if (tmpVictim == typeR) {
                         typeRList.get(typeRList.indexOf(new Chip(victimCol, victimRow))).setOnBoard(false);
                     }
-                    if(tmpVictim==typeB){
+                    if (tmpVictim == typeB) {
                         typeBList.get(typeBList.indexOf(new Chip(victimCol, victimRow))).setOnBoard(false);
                     }
                     movePiece(attackerRow, attackerCol, victimRow - 1, victimCol - 1);
@@ -161,10 +165,10 @@ public class CheckerBoard {
                 }
                 if (isMoveable(attackerRow, attackerCol, victimRow - 1, victimCol + 1)) {
                     checkersBoard[victimRow][victimCol] = empty;
-                    if(tmpVictim==typeR){
+                    if (tmpVictim == typeR) {
                         typeRList.get(typeRList.indexOf(new Chip(victimCol, victimRow))).setOnBoard(false);
                     }
-                    if(tmpVictim==typeB){
+                    if (tmpVictim == typeB) {
                         typeBList.get(typeBList.indexOf(new Chip(victimCol, victimRow))).setOnBoard(false);
                     }
                     movePiece(attackerRow, attackerCol, victimRow - 1, victimCol + 1);
@@ -174,10 +178,10 @@ public class CheckerBoard {
             if (attackerRow < victimRow) {
                 if (isMoveable(attackerRow, attackerCol, victimRow + 1, victimCol - 1)) {
                     checkersBoard[victimRow][victimCol] = empty;
-                    if(tmpVictim==typeR){
+                    if (tmpVictim == typeR) {
                         typeRList.get(typeRList.indexOf(new Chip(victimCol, victimRow))).setOnBoard(false);
                     }
-                    if(tmpVictim==typeB){
+                    if (tmpVictim == typeB) {
                         typeBList.get(typeBList.indexOf(new Chip(victimCol, victimRow))).setOnBoard(false);
                     }
                     movePiece(attackerRow, attackerCol, victimRow + 1, victimCol - 1);
@@ -185,10 +189,10 @@ public class CheckerBoard {
                 }
                 if (isMoveable(attackerRow, attackerCol, victimRow + 1, victimCol + 1)) {
                     checkersBoard[victimRow][victimCol] = empty;
-                    if(tmpVictim==typeR){
+                    if (tmpVictim == typeR) {
                         typeRList.get(typeRList.indexOf(new Chip(victimCol, victimRow))).setOnBoard(false);
                     }
-                    if(tmpVictim==typeB){
+                    if (tmpVictim == typeB) {
                         typeBList.get(typeBList.indexOf(new Chip(victimCol, victimRow))).setOnBoard(false);
                     }
                     movePiece(attackerRow, attackerCol, victimRow + 1, victimCol + 1);
@@ -204,7 +208,7 @@ public class CheckerBoard {
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
                 if ((i + j) % 2 == 0) {
-                    if(isUsedByNormalPiece(type, i, j) || isUsedByQueen(type, i, j)){
+                    if (isUsed(type, i, j)) {
                         count++;
                     }
                 }
@@ -212,25 +216,29 @@ public class CheckerBoard {
         }
         return count;
     }
-    public boolean isUsed(char type, int row,int col){
-        if(checkersBoard[row][col]==Character.toLowerCase(type) || checkersBoard[row][col]==Character.toUpperCase(type)){
+
+    public boolean isUsed(char type, int row, int col) {
+        if (checkersBoard[row][col] == Character.toLowerCase(type) || checkersBoard[row][col] == Character.toUpperCase(type)) {
             return true;
         }
         return false;
     }
-    public boolean isUsedByNormalPiece(char type, int row,int col){
-        if(checkersBoard[row][col]==Character.toLowerCase(type)){
+
+    public boolean isUsedByNormalPiece(char type, int row, int col) {
+        if (checkersBoard[row][col] == Character.toLowerCase(type)) {
             return true;
         }
         return false;
     }
-    public boolean isUsedByQueen(char type, int row,int col){
-        if(checkersBoard[row][col]==Character.toUpperCase(type)){
+
+    public boolean isUsedByQueen(char type, int row, int col) {
+        if (checkersBoard[row][col] == Character.toUpperCase(type)) {
             return true;
         }
         return false;
     }
-    public int getSize(){
+
+    public int getSize() {
         return boardSize;
     }
 
@@ -241,5 +249,202 @@ public class CheckerBoard {
     public List<Chip> getTypeBList() {
         return typeBList;
     }
+
+    public int calcHeuristicValue(char type) {
+        HashMap<Character, Integer> map = calcBoardHeuristicValue3();
+        int heuristicValueR = map.get(typeR);
+        int heuristicValueB = map.get(typeB);
+        if (Character.toLowerCase(type) == Character.toLowerCase(typeR)) {
+            return heuristicValueR - heuristicValueB;
+        } else if (Character.toLowerCase(type) == Character.toLowerCase(typeB)) {
+            return heuristicValueB - heuristicValueR;
+        }
+        return -1;
+    }
+
+    public int calcHeuristicValueEnding(char type) {
+        HashMap<Character, Integer> map = calcBoardHeuristicValueEnding1();
+        int heuristicValueR = map.get(typeR);
+        int heuristicValueB = map.get(typeB);
+        if (Character.toLowerCase(type) == Character.toLowerCase(typeR)) {
+            return heuristicValueR - heuristicValueB;
+        } else if (Character.toLowerCase(type) == Character.toLowerCase(typeB)) {
+            return heuristicValueB - heuristicValueR;
+        }
+        return -1;
+    }
+
+    private HashMap calcBoardHeuristicValue3() {
+        int heuristicValueR = 0;
+        int heuristicValueB = 0;
+        for (int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
+                if ((i + j) % 2 == 0) {
+                    if (isUsedByNormalPiece(typeR, i, j)) {
+                        heuristicValueR += 5 + i;
+                    }
+                    if (isUsedByQueen(typeR, i, j)) {
+                        heuristicValueR += 5 + i + 2;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
+                if ((i + j) % 2 == 0) {
+                    if (isUsed(typeB, i, j)) {
+                        heuristicValueB += 5 + (7 - i);
+                    }
+                    if (isUsedByQueen(typeB, i, j)) {
+                        heuristicValueB += 5 + (7 - i) + 2;
+                    }
+                }
+            }
+        }
+        HashMap<Character, Integer> map;
+        map = new HashMap<Character, Integer>();
+        map.put(typeB, heuristicValueB);
+        map.put(typeR, heuristicValueR);
+        return map;
+    }
+
+    private HashMap calcBoardHeuristicValue2() {
+        int heuristicValueR = 0;
+        int heuristicValueB = 0;
+        for (int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
+                if ((i + j) % 2 == 0) {
+                    if (isUsedByNormalPiece(typeR, i, j)) {
+                        if (i < 4) {
+                            heuristicValueR += 5;
+                        } else {
+                            heuristicValueR += 7;
+                        }
+                    }
+                    if (isUsedByQueen(typeR, i, j)) {
+                        heuristicValueR += 10;
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
+                if ((i + j) % 2 == 0) {
+                    if (isUsed(typeB, i, j)) {
+                        if (i > 3) {
+                            heuristicValueB += 5;
+                        } else {
+                            heuristicValueB += 7;
+                        }
+                    }
+                    if (isUsedByQueen(typeB, i, j)) {
+                        heuristicValueB += 10;
+                    }
+                }
+            }
+        }
+        HashMap<Character, Integer> map;
+        map = new HashMap<Character, Integer>();
+        map.put(typeB, heuristicValueB);
+        map.put(typeR, heuristicValueR);
+        return map;
+    }
     
+    private HashMap calcBoardHeuristicValue4() {               
+        HashMap<Character, Integer> map;
+        map = this.calcBoardHeuristicValue2();
+        float heuristicValueR = map.get(typeR);
+        float heuristicValueB = map.get(typeB);
+        heuristicValueR=heuristicValueR*10/this.pieceCount(typeR);
+        heuristicValueB=heuristicValueB*10/this.pieceCount(typeB);
+        map.put(typeB, (int)heuristicValueB);
+        map.put(typeR, (int)heuristicValueR);
+        return map;        
+    }
+    
+    private HashMap calcBoardHeuristicValueEnding1() {               
+        HashMap<Character, Integer> map;
+        map = new HashMap<Character, Integer>();
+        int heuristicValueR = 0;
+        int heuristicValueB = 0;
+        
+        for(Chip tmp:typeRList){
+            int distance=1;
+            if(tmp.isOnBoard()){
+                for(int i=Math.max(0, tmp.getRow()-distance);i<Math.min(boardSize, tmp.getRow()+distance);i++ ){
+                    for(int j=Math.max(0, tmp.getCol()-distance);j<Math.min(boardSize, tmp.getCol()+distance);j++){
+                        if(Character.toUpperCase(checkersBoard[i][j])==Character.toUpperCase(typeB)){
+                            heuristicValueR+=distance;
+                        }
+                    }
+                }
+            }
+        }
+        for(Chip tmp:typeBList){
+            int distance=1;
+            if(tmp.isOnBoard()){
+                for(int i=Math.max(0, tmp.getRow()-distance);i<Math.min(boardSize, tmp.getRow()+distance);i++ ){
+                    for(int j=Math.max(0, tmp.getCol()-distance);j<Math.min(boardSize, tmp.getCol()+distance);j++){
+                        if(Character.toUpperCase(checkersBoard[i][j])==Character.toUpperCase(typeR)){
+                            heuristicValueB+=distance;
+                        }
+                    }
+                }
+            }
+        }                
+        
+        map.put(typeB, heuristicValueB);
+        map.put(typeR, heuristicValueR);
+        return map;        
+    }
+    
+    
+    private HashMap calcBoardHeuristicValueEnding2() {               
+        HashMap<Character, Integer> map;
+        map = new HashMap<Character, Integer>();
+        int heuristicValueR = 0;
+        int heuristicValueB = 0;
+        
+        for(Chip tmp:typeRList){
+            int distance=boardSize-1;
+            boolean done=false;
+            if(tmp.isOnBoard()){
+                for(int i=Math.min(boardSize-1, tmp.getRow()+distance);i>=Math.max(0, tmp.getRow()-distance);i-- ){
+                    for(int j=Math.min(boardSize-1, tmp.getCol()+distance);j>=Math.max(0, tmp.getCol()-distance);j--){
+                        if(Character.toUpperCase(checkersBoard[i][j])==Character.toUpperCase(typeB)){
+                            heuristicValueR=distance;
+                            done=true;
+                            break;
+                        }
+                    }
+                    if(done){
+                        break;
+                    }
+                }
+            }
+        }
+        for(Chip tmp:typeBList){
+            int distance=boardSize-1;
+            boolean done=false;
+            if(tmp.isOnBoard()){
+                for(int i=Math.min(boardSize-1, tmp.getRow()+distance);i>=Math.max(0, tmp.getRow()-distance);i-- ){
+                    for(int j=Math.min(boardSize-1, tmp.getCol()+distance);j>=Math.max(0, tmp.getCol()-distance);j--){
+                        if(Character.toUpperCase(checkersBoard[i][j])==Character.toUpperCase(typeR)){
+                            heuristicValueB=distance;
+                            done=true;
+                            break;
+                        }
+                    }
+                    if(done){
+                        break;
+                    }
+                }
+            }
+        }                
+        
+        map.put(typeB, heuristicValueB);
+        map.put(typeR, heuristicValueR);
+        return map;        
+    }
 }

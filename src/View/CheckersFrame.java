@@ -4,7 +4,7 @@ import View.BoardPanel;
 import javax.swing.JFrame;
 
 public class CheckersFrame extends JFrame {
-    public BoardPanel panel;
+    BoardPanel panel;
     public CheckersFrame(Logic.CheckerBoard cb) {
         panel=new BoardPanel(cb);
         add(panel);
@@ -18,5 +18,11 @@ public class CheckersFrame extends JFrame {
     }
     public void updateFrame(){
         panel.repaint();
+    }
+    public int getGameState(){
+        return BoardPanel.getGameState();
+    }
+    public char getPlayerColor(){
+        return BoardPanel.getPlayerColor();
     }
 }

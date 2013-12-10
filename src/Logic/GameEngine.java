@@ -5,6 +5,8 @@
 package Logic;
 
 import View.CheckersFrame;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -12,106 +14,71 @@ import View.CheckersFrame;
  */
 public class GameEngine {
 
-    private CheckerBoard cb;
+    private final CheckerBoard cb;
     private View.CheckersFrame checkersFrame;
-    public GameEngine() throws InterruptedException {
+    public GameEngine(){
         cb = new CheckerBoard(8);
         checkersFrame=new CheckersFrame(cb);
         /////////////////////////////testing
-        cb.printBoard();
-        
-        checkersFrame.updateFrame();
-        Thread.sleep(2000);
+        while(checkersFrame.getGameState()==0){
+            System.out.println("without this line not working");
+        }
+        redrawGUI();        
         
         cb.movePiece(2, 0, 3, 1);
-        cb.printBoard();
-        checkersFrame.updateFrame();
-        Thread.sleep(2000);
         
+        redrawGUI();
+                
         cb.movePiece(5, 1, 4, 2);
         
-        checkersFrame.updateFrame();
-        Thread.sleep(2000);
+        redrawGUI();        
         
         cb.movePiece(2, 2, 3, 3);
         
-        checkersFrame.updateFrame();
-        Thread.sleep(2000);
-        
-                
-        cb.printBoard();
+        redrawGUI();                
+                        
         if (cb.cutPiece(4, 2, 3, 1)) {
-            System.out.println("done");
-            cb.printBoard();
+            System.out.println("done");            
         } else {
             System.out.println("false");
         }
         
-        checkersFrame.updateFrame();
-        Thread.sleep(2000);
+        redrawGUI();        
         
         cb.movePiece(1, 1, 2, 2);
         
-        checkersFrame.updateFrame();
-        Thread.sleep(2000);
+        redrawGUI();
         
-        System.out.println("R"+cb.pieceCount('R')+" B"+cb.pieceCount('B'));
         cb.movePiece(5, 7, 4, 6);
         
-        checkersFrame.updateFrame();
-        Thread.sleep(2000);
-        
-        System.out.println("R"+cb.pieceCount('R')+" B"+cb.pieceCount('B'));
+        redrawGUI();
+                
         cb.movePiece(0, 2, 1, 1);
-        checkersFrame.updateFrame();
-        Thread.sleep(2000);
         
-        System.out.println("R"+cb.pieceCount('R')+" B"+cb.pieceCount('B'));
-        cb.cutPiece(2, 0, 1, 1);
+        redrawGUI();
+                
+        cb.cutPiece(2, 0, 1, 1);        
         
-        checkersFrame.updateFrame();
-        Thread.sleep(2000);
-        /*
-        System.out.println("R"+cb.pieceCount('R')+" B"+cb.pieceCount('B'));
-        cb.cutPiece(7,1,6,2);
+        redrawGUI();
+                
+        cb.movePiece(0, 0, 1, 1);
         
-        checkersFrame.updateFrame();
-        Thread.sleep(2000);
+        redrawGUI();
         
-        cb.movePiece(1,1,2,0);
+        cb.cutPiece(0, 2, 1, 1);       
         
-        checkersFrame.updateFrame();
-        Thread.sleep(2000);
-        
-        cb.movePiece(3,3,2,2);
-        
-        checkersFrame.updateFrame();
-        Thread.sleep(2000);
-        
-        cb.movePiece(0,0,1,1);
-        
-        checkersFrame.updateFrame();
-        Thread.sleep(2000);
-        
-        cb.cutPiece(2,2,1,1);
-        
-        checkersFrame.updateFrame();
-        Thread.sleep(2000);
-        
-        cb.movePiece(0,2,1,1);
-        
-        checkersFrame.updateFrame();
-        Thread.sleep(2000);
-        
-        cb.cutPiece(0,0,1,1);        
-        
-        checkersFrame.updateFrame();
-        Thread.sleep(2000);
-        
-        cb.printBoard();
-        checkersFrame.updateFrame();
-        Thread.sleep(2000);
-        System.out.println("R"+cb.pieceCount('R')+" B"+cb.pieceCount('B'));
-        ////////////////////////////////*/
+        redrawGUI();
+                
+    }
+    public void redrawGUI(){
+        try {
+            checkersFrame.updateFrame();            
+            cb.printBoard();
+            System.out.println("R"+cb.pieceCount('R')+" B"+cb.pieceCount('B'));
+            System.out.println("R"+cb.calcHeuristicValue('R')+" B"+cb.calcHeuristicValue('B'));
+            Thread.sleep(2000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(GameEngine.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
