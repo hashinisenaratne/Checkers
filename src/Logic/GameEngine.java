@@ -21,7 +21,8 @@ public class GameEngine {
         checkersFrame=new CheckersFrame(cb);
         /////////////////////////////testing
         while(checkersFrame.getGameState()==0){
-            System.out.println("without this line not working");
+//            System.out.println("without this line not working");
+            Thread.yield();
         }
         redrawGUI();        
         

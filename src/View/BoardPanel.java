@@ -173,7 +173,7 @@ public final class BoardPanel extends JPanel {
     }
     
     public int col(int x){
-        return ((x-20)/140);
+        return ((x-20)/70);
     }
     
     public int row(int y){
