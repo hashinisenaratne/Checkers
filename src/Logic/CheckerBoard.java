@@ -26,8 +26,8 @@ public class CheckerBoard {
         typeR = 'r';
         typeB = 'b';
         empty = '_';
-        typeRList = new LinkedList<Chip>();
-        typeBList = new LinkedList<Chip>();
+        typeRList = new LinkedList<>();
+        typeBList = new LinkedList<>();
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
                 if ((i + j) % 2 == 0) {
