@@ -16,7 +16,7 @@ public class CheckerBoard {
 
     private char[][] checkersBoard;
     private int boardSize;
-    private char typeR, typeB, empty;
+    private char typeR, typeB, empty,invalid;
     private List<Chip> typeRList;
     private List<Chip> typeBList;
 
@@ -26,12 +26,15 @@ public class CheckerBoard {
         typeR = 'r';
         typeB = 'b';
         empty = '_';
+        invalid='#';
         typeRList = new LinkedList<>();
         typeBList = new LinkedList<>();
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
                 if ((i + j) % 2 == 0) {
                     checkersBoard[i][j] = empty;    //EMPTY cell
+                }else{
+                    checkersBoard[i][j] = invalid;
                 }
             }
         }
@@ -108,6 +111,9 @@ public class CheckerBoard {
     }
 
     public boolean isMoveable(int sRow, int sCol, int dRow, int dCol) {
+        if (((sRow+sCol) % 2 != 0) || (dRow+dCol)%2!=0 ) {
+            return false;
+        }
         if (dRow >= boardSize || dRow < 0) {
             return false;
         }
@@ -447,4 +453,14 @@ public class CheckerBoard {
         map.put(typeR, heuristicValueR);
         return map;        
     }
+
+    public char getTypeR() {
+        return typeR;
+    }
+
+    public char getTypeB() {
+        return typeB;
+    }
+    
+    
 }
