@@ -462,5 +462,16 @@ public class CheckerBoard {
         return typeB;
     }
     
-    
+    public boolean isMoveableByType(char type,int sRow, int sCol, int dRow, int dCol){
+        if(Character.toLowerCase(checkersBoard[sRow][sCol])== Character.toLowerCase(type)){
+            return isMoveable(sRow, sCol, dRow, dCol);
+        }
+        return false;
+    }
+    public boolean movePieceByType(char type,int sRow, int sCol, int dRow, int dCol){
+        if(isMoveableByType(type, sRow, sCol, dRow, dCol)){
+            return movePiece(sRow, sCol, dRow, dCol);
+        }
+        return false;
+    }
 }

@@ -97,12 +97,22 @@ public class GameEngine {
     public void process() {
         waitUntilGamestated();
         while (gameState != 2) {
-            takeMove();
-            redrawGUI();
+            if(Character.toLowerCase(manualColour)!=cb.getTypeB()){
+                takeMove(cb.getTypeB());
+                redrawGUI();
+            }else{
+                waitForUserMove();
+            }
+            if(Character.toLowerCase(manualColour)!=cb.getTypeR()){
+                takeMove(cb.getTypeR());
+                redrawGUI();
+            }else{
+                waitForUserMove();
+            }
         }
     }
 
-    public void takeMove() {
+    public void takeMove(char type) {
         int sR, sC, eR, eC;
         do {
             sR = (int) ((Math.random() * 10) % 8);
@@ -110,7 +120,10 @@ public class GameEngine {
             eR = sR +(int) Math.pow(-1,(int)(Math.random() * 100));
             eC = sC+(int) Math.pow(-1,(int)(Math.random() * 100));
             //System.out.println("nomove" + sR + "," + sC + "," + eR + "," + eC);
-        } while (!cb.movePiece(sR, sC, eR, eC));// || !cb.cutPiece(sR, sC, eR, eC));
+        } while (!cb.movePieceByType(type,sR, sC, eR, eC));// || !cb.cutPiece(sR, sC, eR, eC));
         System.out.println("move" + sR + "," + sC + "," + eR + "," + eC);
+    }
+    public void waitForUserMove(){
+        
     }
 }
