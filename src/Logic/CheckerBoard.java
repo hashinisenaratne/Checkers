@@ -141,6 +141,18 @@ public class CheckerBoard {
                 //not allowing too long moves
                 return false;
             }
+            if(Math.abs(dCol - sCol) == 2 && Math.abs(dRow - sRow) == 2){
+                if(Character.toLowerCase(checkersBoard[sRow][sCol])==Character.toLowerCase(typeR)){
+                    if(Character.toLowerCase(checkersBoard[(dRow+sRow)/2][(dCol+sCol)/2])!=Character.toLowerCase(typeB)){
+                        return false;
+                    }
+                }
+                if(Character.toLowerCase(checkersBoard[sRow][sCol])==Character.toLowerCase(typeB)){
+                    if(Character.toLowerCase(checkersBoard[(dRow+sRow)/2][(dCol+sCol)/2])!=Character.toLowerCase(typeR)){
+                        return false;
+                    }
+                }
+            }
             return true;
         }
         return false;
