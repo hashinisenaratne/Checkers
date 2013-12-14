@@ -25,4 +25,7 @@ public class CheckersFrame extends JFrame {
     public char getPlayerColor(){
         return BoardPanel.getPlayerColor();
     }
+    public boolean isUserMoved(){
+        return panel.isUserMoved();
+    }
 }

@@ -36,6 +36,7 @@ public final class BoardPanel extends JPanel {
     private final JButton startButton;
     JCheckBox checkBoxBlack, checkBoxRed;
     static JPanel boardPanel;
+    private boolean userMoved;
     
     public BoardPanel(Logic.CheckerBoard cb) {
         
@@ -118,9 +119,10 @@ public final class BoardPanel extends JPanel {
         this.addMouseListener (new MouseAdapter() {
             @Override
             public void mouseClicked (MouseEvent e) {
-                if(gameState==1 && e.getY ()>=20 && e.getY ()<=580 && e.getX ()>=20 && e.getX ()<=580){
+                if(gameState==1 && e.getY ()>=20 && e.getY ()<=580 && e.getX ()>=20 && e.getX ()<=580){                    
                     JOptionPane.showMessageDialog(
                     e.getComponent (), "Row: " + row(e.getY ()) + ", Column: " + col(e.getX ()));
+                    userMoved=true;
                 }
                 
             }
@@ -219,5 +221,13 @@ public final class BoardPanel extends JPanel {
             return 'R';
         return '_';
     }
+
+    public boolean isUserMoved() {
+        if(userMoved){
+         userMoved=false;
+         return true;
+        }            
+        return false;
+    }    
     
 }
