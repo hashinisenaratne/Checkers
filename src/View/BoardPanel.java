@@ -291,5 +291,13 @@ public final class BoardPanel extends JPanel {
             return 'R';
         return '_';
     }
+
+    public boolean isMoved() {
+        if(!manual){
+            manual=true;
+            return true;
+        }
+        return false;
+    }
     
 }

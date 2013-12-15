@@ -136,8 +136,8 @@ public class GameEngine {
         System.out.println("move" + sR + "," + sC + "," + eR + "," + eC);
     }
     public void waitForUserMove(){
-//        while(!checkersFrame.isUserMoved()){
-//            
-//        }
+        while(!checkersFrame.isUserMoved()){
+            
+        }
     }
 }
