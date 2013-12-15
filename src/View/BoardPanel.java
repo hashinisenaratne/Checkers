@@ -37,9 +37,9 @@ public final class BoardPanel extends JPanel {
     JCheckBox checkBoxBlack, checkBoxRed;
     static JPanel boardPanel;
     int selectRow=0,selectCol=0, moveRow=0,moveCol=0;
-    boolean maual=true,select=false,move=false;
+    boolean manual=true,select=false,move=false;
     
-    public BoardPanel(Logic.CheckerBoard cb) {
+    public BoardPanel(final Logic.CheckerBoard cb) {
         
         boardPanel = this;
         gameState=0;
@@ -91,8 +91,10 @@ public final class BoardPanel extends JPanel {
         checkBoxBlack.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                if(checkBoxBlack.isSelected())
+                if(checkBoxBlack.isSelected()){
                     playerColor=0;
+                    manual = true;
+                }
             }
         });
         
@@ -101,6 +103,7 @@ public final class BoardPanel extends JPanel {
             public void itemStateChanged(ItemEvent e) {
                 if(checkBoxRed.isSelected())
                     playerColor=1;
+                    manual = false;
             }
         });
         
@@ -121,18 +124,45 @@ public final class BoardPanel extends JPanel {
             @Override
             public void mouseClicked (MouseEvent e) {
                 if(gameState==1 && e.getY ()>=20 && e.getY ()<=580 && e.getX ()>=20 && e.getX ()<=580){
-                    if(maual){
+                    if(manual){
+                        char type;
+                        if(playerColor==0)
+                            type='b';
+                        else
+                            type='r';
                         if(!select && !move){
-                            selectRow= row(e.getY ());
-                            selectCol= col(e.getX ());
-                            select=true;
+                            if(cb.isUsed(type, row(e.getY ()), col(e.getX ()))){
+                                selectRow= row(e.getY ());
+                                selectCol= col(e.getX ());
+                                select=true;
+                            }
+                            else{
+                                JOptionPane.showMessageDialog(
+                                e.getComponent (), "Select a chip of "+(playerColor==0?"Black":"Red")+" color");
+                            }
                         }
                         else if(select && !move){
-                            moveRow= row(e.getY ());
-                            moveCol= col(e.getX ());
-                            move=true;
+                            if(!(cb.isUsed('r', row(e.getY ()), col(e.getX ()))) &&
+                                    !(cb.isUsed('b', row(e.getY ()), col(e.getX ()))) &&
+                                    !(cb.isUsed('#', row(e.getY ()), col(e.getX ())))){
+                                moveRow= row(e.getY ());
+                                moveCol= col(e.getX ());
+                                move=true;
+                            }
+                            else{
+                            JOptionPane.showMessageDialog(
+                                e.getComponent (), "Cell is occupied or invalid");
+                            }
                         }
                         else if(select && move && moveRow== row(e.getY ()) && moveCol== col(e.getX ())){
+                            if(cb.isMoveable(selectRow,selectCol, moveRow, moveCol)){
+                                cb.movePiece(selectRow,selectCol, moveRow, moveCol);
+                            }
+                            else{
+                                JOptionPane.showMessageDialog(
+                                e.getComponent (), "Not a valid move");
+                                //manual=false;
+                            }                            
                             select = move = false;
                         }
                         BoardPanel.boardPanel.repaint();
