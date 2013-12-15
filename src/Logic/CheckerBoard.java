@@ -486,4 +486,45 @@ public class CheckerBoard {
         }
         return false;
     }
+    public boolean hasMoves(int row,int col){
+        if(isMoveable(row, col, row+1, col+1)){
+            return true;
+        }
+        if(isMoveable(row, col, row-1, col+1)){
+            return true;
+        }
+        if(isMoveable(row, col, row-1, col-1)){
+            return true;
+        }
+        if(isMoveable(row, col, row+1, col-1)){
+            return true;
+        }
+        if(isMoveable(row, col, row+2, col+2)){
+            return true;
+        }
+        if(isMoveable(row, col, row-2, col+2)){
+            return true;
+        }
+        if(isMoveable(row, col, row-2, col-2)){
+            return true;
+        }
+        if(isMoveable(row, col, row+2, col-2)){
+            return true;
+        }
+        return false;    
+    }
+    public boolean hasMoves(char type){        
+        for(int i=0;i<boardSize;i++){
+            for(int j=0;j<boardSize;j++){
+                if ((i + j) % 2 == 0) {
+                    if(Character.toLowerCase(checkersBoard[i][j])==Character.toLowerCase(type)){
+                        if(hasMoves(i, j)){
+                            return true;
+                        }                        
+                    }
+                } 
+            }
+        }
+        return false;
+    }
 }
