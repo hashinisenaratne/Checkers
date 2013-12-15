@@ -141,6 +141,18 @@ public class CheckerBoard {
                 //not allowing too long moves
                 return false;
             }
+            if(Math.abs(dCol - sCol) == 2 && Math.abs(dRow - sRow) == 2){
+                if(Character.toLowerCase(checkersBoard[sRow][sCol])==Character.toLowerCase(typeR)){
+                    if(Character.toLowerCase(checkersBoard[(dRow+sRow)/2][(dCol+sCol)/2])!=Character.toLowerCase(typeB)){
+                        return false;
+                    }
+                }
+                if(Character.toLowerCase(checkersBoard[sRow][sCol])==Character.toLowerCase(typeB)){
+                    if(Character.toLowerCase(checkersBoard[(dRow+sRow)/2][(dCol+sCol)/2])!=Character.toLowerCase(typeR)){
+                        return false;
+                    }
+                }
+            }
             return true;
         }
         return false;
@@ -471,6 +483,35 @@ public class CheckerBoard {
     public boolean movePieceByType(char type,int sRow, int sCol, int dRow, int dCol){
         if(isMoveableByType(type, sRow, sCol, dRow, dCol)){
             return movePiece(sRow, sCol, dRow, dCol);
+        }
+        return false;
+    }
+    public boolean hasMoves(int row,int col){
+        if(isMoveable(row, col, row+1, col+1)){
+            return true;
+        }
+        if(isMoveable(row, col, row-1, col+1)){
+            return true;
+        }
+        if(isMoveable(row, col, row-1, col-1)){
+            return true;
+        }
+        if(isMoveable(row, col, row+1, col-1)){
+            return true;
+        }
+        return false;    
+    }
+    public boolean hasMoves(char type){        
+        for(int i=0;i<boardSize;i++){
+            for(int j=0;j<boardSize;j++){
+                if ((i + j) % 2 == 0) {
+                    if(Character.toLowerCase(checkersBoard[i][j])==Character.toLowerCase(type)){
+                        if(hasMoves(i, j)){
+                            return true;
+                        }                        
+                    }
+                } 
+            }
         }
         return false;
     }
