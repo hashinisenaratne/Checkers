@@ -100,6 +100,7 @@ public class GameEngine {
         while (gameState != 2) {
             if(Character.toLowerCase(manualColour)!=cb.getTypeB()){
                 takeMove(cb.getTypeB());
+                checkersFrame.setManualMove();
                 redrawGUI();
             }else{
                 waitForUserMove();
@@ -111,6 +112,7 @@ public class GameEngine {
             }
             if(Character.toLowerCase(manualColour)!=cb.getTypeR()){
                 takeMove(cb.getTypeR());
+                checkersFrame.setManualMove();
                 redrawGUI();
             }else{
                 waitForUserMove();

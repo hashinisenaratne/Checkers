@@ -298,11 +298,13 @@ public final class BoardPanel extends JPanel {
     }
 
     public boolean isMoved() {
-        if(!manual){
-            manual=true;
+        if(!manual){            
             return true;
         }
         return false;
+    }
+    public void setManualMove(){
+        manual=true;
     }
     
 }

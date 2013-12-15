@@ -29,4 +29,7 @@ public class CheckersFrame extends JFrame {
     public boolean isUserMoved() {
         return panel.isMoved();
     }
+    public void setManualMove(){
+        panel.setManualMove();
+    }
 }
