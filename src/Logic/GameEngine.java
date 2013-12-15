@@ -7,6 +7,7 @@ package Logic;
 import View.CheckersFrame;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.sound.midi.Soundbank;
 
 /**
  *
@@ -103,13 +104,24 @@ public class GameEngine {
             }else{
                 waitForUserMove();
             }
+            if(!cb.hasMoves(cb.getTypeR())){
+                gameState=2;
+                System.out.println("Black Wins");
+                break;
+            }
             if(Character.toLowerCase(manualColour)!=cb.getTypeR()){
                 takeMove(cb.getTypeR());
                 redrawGUI();
             }else{
                 waitForUserMove();
             }
+            if(!cb.hasMoves(cb.getTypeB())){
+                gameState=2;
+                System.out.println("Red Wins");
+                break;
+            }
         }
+        System.out.println("Game Over");
     }
 
     public void takeMove(char type) {
@@ -124,6 +136,8 @@ public class GameEngine {
         System.out.println("move" + sR + "," + sC + "," + eR + "," + eC);
     }
     public void waitForUserMove(){
-        
+//        while(!checkersFrame.isUserMoved()){
+//            
+//        }
     }
 }
