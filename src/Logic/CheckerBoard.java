@@ -19,7 +19,7 @@ public class CheckerBoard {
     private char typeR, typeB, empty, invalid;
     private List<Chip> typeRList;
     private List<Chip> typeBList;
-    private boolean isLastCut;
+    private int lastCutPieceRow,lastCutPieceCol;
 
     public CheckerBoard(int size) {
         boardSize = size;
@@ -30,7 +30,8 @@ public class CheckerBoard {
         invalid = '#';
         typeRList = new LinkedList<>();
         typeBList = new LinkedList<>();
-        isLastCut = false;
+        lastCutPieceRow=-1;
+        lastCutPieceCol=-1;
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
                 if ((i + j) % 2 == 0) {
@@ -107,7 +108,8 @@ public class CheckerBoard {
                 checkersBoard[dRow][dCol] = Character.toUpperCase(typeB);     //uppercase typeB to represent BLACK QUEEN
                 typeBList.get(typeBList.indexOf(new Chip(dCol, dRow))).setIsKing(true);
             }
-            isLastCut = false;
+            lastCutPieceRow=-1;
+            lastCutPieceCol=-1;
             return true;
         }
         return false;
@@ -175,7 +177,8 @@ public class CheckerBoard {
             if (attackerRow > victimRow) {
                 if (isMoveable(attackerRow, attackerCol, victimRow - 1, victimCol - 1)) {
                     movePiece(attackerRow, attackerCol, victimRow - 1, victimCol - 1);
-                    isLastCut = true;
+                    lastCutPieceRow=victimRow-1;
+                    lastCutPieceCol=victimCol-1;
                     checkersBoard[victimRow][victimCol] = empty;
                     if (tmpVictim == typeR) {
                         typeRList.get(typeRList.indexOf(new Chip(victimCol, victimRow))).setOnBoard(false);
@@ -187,7 +190,8 @@ public class CheckerBoard {
                 }
                 if (isMoveable(attackerRow, attackerCol, victimRow - 1, victimCol + 1)) {
                     movePiece(attackerRow, attackerCol, victimRow - 1, victimCol + 1);
-                    isLastCut = true;
+                    lastCutPieceRow=victimRow-1;
+                    lastCutPieceCol=victimCol+1;
                     checkersBoard[victimRow][victimCol] = empty;
                     if (tmpVictim == typeR) {
                         typeRList.get(typeRList.indexOf(new Chip(victimCol, victimRow))).setOnBoard(false);
@@ -201,7 +205,8 @@ public class CheckerBoard {
             if (attackerRow < victimRow) {
                 if (isMoveable(attackerRow, attackerCol, victimRow + 1, victimCol - 1)) {
                     movePiece(attackerRow, attackerCol, victimRow + 1, victimCol - 1);
-                    isLastCut = true;
+                    lastCutPieceRow=victimRow+1;
+                    lastCutPieceCol=victimCol-1;
                     checkersBoard[victimRow][victimCol] = empty;
                     if (tmpVictim == typeR) {
                         typeRList.get(typeRList.indexOf(new Chip(victimCol, victimRow))).setOnBoard(false);
@@ -213,7 +218,8 @@ public class CheckerBoard {
                 }
                 if (isMoveable(attackerRow, attackerCol, victimRow + 1, victimCol + 1)) {
                     movePiece(attackerRow, attackerCol, victimRow + 1, victimCol + 1);
-                    isLastCut = true;
+                    lastCutPieceRow=victimRow+1;
+                    lastCutPieceCol=victimCol+1;
                     checkersBoard[victimRow][victimCol] = empty;
                     if (tmpVictim == typeR) {
                         typeRList.get(typeRList.indexOf(new Chip(victimCol, victimRow))).setOnBoard(false);
@@ -564,18 +570,8 @@ public class CheckerBoard {
     }
 
     public boolean hasMoreCuts(char type) {
-        if (isLastCut) {
-            for (int i = 0; i < boardSize; i++) {
-                for (int j = 0; j < boardSize; j++) {
-                    if ((i + j) % 2 == 0) {
-                        if (Character.toLowerCase(checkersBoard[i][j]) == Character.toLowerCase(type)) {
-                            if (hasCuts(i, j)) {
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
+        if(lastCutPieceRow!=-1){
+            return hasCuts(lastCutPieceRow, lastCutPieceCol);
         }
         return false;
     }
