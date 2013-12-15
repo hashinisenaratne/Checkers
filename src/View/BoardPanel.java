@@ -36,6 +36,8 @@ public final class BoardPanel extends JPanel {
     private final JButton startButton;
     JCheckBox checkBoxBlack, checkBoxRed;
     static JPanel boardPanel;
+    int selectRow=0,selectCol=0, moveRow=0,moveCol=0;
+    boolean maual=true,select=false,move=false;
     
     public BoardPanel(Logic.CheckerBoard cb) {
         
@@ -106,12 +108,12 @@ public final class BoardPanel extends JPanel {
         this.add(checkBoxRed);
 
         //creating the chip arrays and set column, row positions for each
-        blackchips = new Logic.Chip[blackMax];
+        /*blackchips = new Logic.Chip[blackMax];
         redchips = new Logic.Chip[redMax];
         for (int i = 0; i < 12; i++) {
-            redchips[i] = new Logic.Chip(i % 4, i / 4);
-            blackchips[i] = new Logic.Chip(i % 4, 7 - i / 4);
-        }
+            redchips[i] = new Logic.Chip((i/4 % 2 != 1) ? (i%4) * 2 : (i%4) * 2+1, i / 4);
+            blackchips[i] = new Logic.Chip(0, 7 - i / 4);
+        }*/
         
         updateChipInfo();
         
@@ -119,8 +121,26 @@ public final class BoardPanel extends JPanel {
             @Override
             public void mouseClicked (MouseEvent e) {
                 if(gameState==1 && e.getY ()>=20 && e.getY ()<=580 && e.getX ()>=20 && e.getX ()<=580){
-                    JOptionPane.showMessageDialog(
-                    e.getComponent (), "Row: " + row(e.getY ()) + ", Column: " + col(e.getX ()));
+                    if(maual){
+                        if(!select && !move){
+                            selectRow= row(e.getY ());
+                            selectCol= col(e.getX ());
+                            select=true;
+                        }
+                        else if(select && !move){
+                            moveRow= row(e.getY ());
+                            moveCol= col(e.getX ());
+                            move=true;
+                        }
+                        else if(select && move && moveRow== row(e.getY ()) && moveCol== col(e.getX ())){
+                            select = move = false;
+                        }
+                        BoardPanel.boardPanel.repaint();
+                    }
+                    else{
+                    select=false;
+                    move=false;
+                    }
                 }
                 
             }
@@ -139,33 +159,55 @@ public final class BoardPanel extends JPanel {
             checkBoxRed.setVisible(false);
             g2d.drawImage(boardImg, 0, 0, null);
             updateChipInfo();
+            
             for (int i = 0; i < redMax; i++) {
                 //place red chips on the board
-                g2d.drawImage(redchipImg, pixelXPos(redchips[i].getCol(), redchips[i].getRow()), pixelYPos(redchips[i].getRow()), null);
+                g2d.drawImage(redchipImg, pixelXPos(redchips[i].getCol()), pixelYPos(redchips[i].getRow()), null);
                 //if the chip is a king, overlap with a crown
                 if (redchips[i].isKing()) {
-                    g2d.drawImage(crownImg, pixelXPos(redchips[i].getCol(), redchips[i].getRow()), pixelYPos(redchips[i].getRow()), null);
+                    g2d.drawImage(crownImg, pixelXPos(redchips[i].getCol()), pixelYPos(redchips[i].getRow()), null);
                 }
-                //System.out.print(redchips[i].row+","+redchips[i].col+" ");
             }
-            //System.out.println("");
+            
             for (int i = 0; i < blackMax; i++) {
                 //place black chips on the board
-                g2d.drawImage(blackchipImg, pixelXPos(blackchips[i].getCol(), blackchips[i].getRow()), pixelYPos(blackchips[i].getRow()), null);
+                g2d.drawImage(blackchipImg, pixelXPos(blackchips[i].getCol()), pixelYPos(blackchips[i].getRow()), null);
                 //if the chip is a king, overlap with a crown
                 if (blackchips[i].isKing()) {
-                    g2d.drawImage(crownImg, pixelXPos(blackchips[i].getCol(), blackchips[i].getRow()), pixelYPos(blackchips[i].getRow()), null);
+                    g2d.drawImage(crownImg, pixelXPos(blackchips[i].getCol()), pixelYPos(blackchips[i].getRow()), null);
                 }
-                //System.out.print(blackchips[i].row+","+blackchips[i].col+" ");
             }
-            //System.out.println("");
+            g2d.setColor(Color.GREEN);
+            
+            if(select){
+                g2d.drawLine(pixelXPos(selectCol), pixelYPos(selectRow),
+                        pixelXPos(selectCol) + 70, pixelYPos(selectRow));
+                g2d.drawLine(pixelXPos(selectCol), pixelYPos(selectRow) + 70,
+                        pixelXPos(selectCol) + 70, pixelYPos(selectRow) + 70);
+                g2d.drawLine(pixelXPos(selectCol), pixelYPos(selectRow),
+                        pixelXPos(selectCol), pixelYPos(selectRow) + 70);
+                g2d.drawLine(pixelXPos(selectCol) + 70, pixelYPos(selectRow),
+                        pixelXPos(selectCol) + 70, pixelYPos(selectRow) + 70);
+            }
+            
+            if(move){
+                g2d.drawLine(pixelXPos(moveCol), pixelYPos(moveRow), 
+                        pixelXPos(moveCol)+70, pixelYPos(moveRow));
+                g2d.drawLine(pixelXPos(moveCol), pixelYPos(moveRow)+70, 
+                        pixelXPos(moveCol)+70, pixelYPos(moveRow)+70);
+                g2d.drawLine(pixelXPos(moveCol), pixelYPos(moveRow), 
+                        pixelXPos(moveCol), pixelYPos(moveRow)+70);
+                g2d.drawLine(pixelXPos(moveCol)+70, pixelYPos(moveRow), 
+                        pixelXPos(moveCol)+70, pixelYPos(moveRow)+70);
+            }
         }
         
         this.paintComponents(g);
     }
     
-    public int pixelXPos(int col, int row) { // (col,row) left,top
-        return (row % 2 != 1) ? col * 140 + 20 : col * 140 + 90;
+    public int pixelXPos(int col) { // (col,row) left,top
+        return col*70 + 20;
+        //return (row % 2 != 1) ? col * 140 + 20 : col * 140 + 90;
     }
     
     public int pixelYPos(int row) { // (col,row) left,top
@@ -189,7 +231,7 @@ public final class BoardPanel extends JPanel {
         
         for (int row = 0; row < checkersBoard.getSize(); row++) {
             for (int col = 0; col < checkersBoard.getSize(); col++) {
-                tmpChip = new Logic.Chip(col / 2, row);
+                tmpChip = new Logic.Chip(col, row);
                 if (checkersBoard.isUsed('R', row, col)) {
                     tmpChip.setOnBoard(true);
                     if (checkersBoard.isUsedByQueen('R', row, col)) {
