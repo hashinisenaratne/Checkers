@@ -32,4 +32,19 @@ public class CheckersFrame extends JFrame {
     public void setManualMove(){
         panel.setManualMove();
     }
+    public void addMovesB(){
+        panel.addMovesB();
+    }
+    
+    public void addMovesR(){
+        panel.addMovesR();
+    }
+    
+    public void addScoreB(){
+        panel.addScoreB();
+    }
+    
+    public void addScoreR(){
+        panel.addScoreR();
+    }
 }

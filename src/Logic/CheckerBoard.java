@@ -107,7 +107,7 @@ public class CheckerBoard {
             if (tmpType == typeB && dRow == 0) {
                 checkersBoard[dRow][dCol] = Character.toUpperCase(typeB);     //uppercase typeB to represent BLACK QUEEN
                 typeBList.get(typeBList.indexOf(new Chip(dCol, dRow))).setIsKing(true);
-            }
+        }
             lastCutPieceRow=-1;
             lastCutPieceCol=-1;
             return true;
@@ -159,6 +159,38 @@ public class CheckerBoard {
                 }
             }
             return true;
+        }
+        return false;
+    }
+    
+    public boolean isACut(int sRow, int sCol, int dRow, int dCol) { //this will be always used after true in isMoveable()
+        char tmpType = checkersBoard[sRow][sCol];
+        Chip tmpChip;
+        if (tmpType == typeR) {
+            tmpChip = typeRList.get(typeRList.indexOf(new Chip(sCol, sRow)));
+            if(!tmpChip.isKing()){
+                if(sRow-dRow == (-2) && Math.abs(sCol-dCol)== 2){
+                    return true;
+                }
+            }
+            else{
+                if(Math.abs(sRow-dRow) == 2 && Math.abs(sCol-dCol)== 2){
+                    return true;
+                }
+            }
+        }
+        else if (tmpType == typeB) {
+            tmpChip = typeBList.get(typeBList.indexOf(new Chip(sCol, sRow)));
+            if(!tmpChip.isKing()){
+                if(sRow-dRow == 2 && Math.abs(sCol-dCol)== 2){
+                    return true;
+                }
+            }
+            else{
+                if(Math.abs(sRow-dRow) == 2 && Math.abs(sCol-dCol)== 2){
+                    return true;
+                }
+            }
         }
         return false;
     }

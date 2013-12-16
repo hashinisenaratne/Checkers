@@ -176,6 +176,20 @@ public final class BoardPanel extends JPanel {
                         }
                         else if(select && move && moveRow== row(e.getY ()) && moveCol== col(e.getX ())){
                             if(cb.isMoveable(selectRow,selectCol, moveRow, moveCol)){
+                                if(getPlayerColor()=='B'){
+                                    addMovesB();
+                                }
+                                else if(getPlayerColor()=='R'){
+                                    addMovesR();
+                                }                                
+                                if(cb.isACut(selectRow,selectCol, moveRow, moveCol)){
+                                    if(getPlayerColor()=='B'){
+                                        addScoreB();
+                                    }
+                                    else if(getPlayerColor()=='R'){
+                                        addScoreR();
+                                    }
+                                }
                                 cb.move(selectRow,selectCol, moveRow, moveCol);
                                 if(cb.hasMoreCuts(getPlayerColor())){
                                     manual=true;
