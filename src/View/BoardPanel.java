@@ -1,4 +1,5 @@
 package View;
+import Logic.Chip;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -176,21 +177,13 @@ public final class BoardPanel extends JPanel {
                         }
                         else if(select && move && moveRow== row(e.getY ()) && moveCol== col(e.getX ())){
                             if(cb.isMoveable(selectRow,selectCol, moveRow, moveCol)){
+                                cb.move(selectRow,selectCol, moveRow, moveCol);
                                 if(getPlayerColor()=='B'){
                                     addMovesB();
                                 }
                                 else if(getPlayerColor()=='R'){
                                     addMovesR();
-                                }                                
-                                if(cb.isACut(selectRow,selectCol, moveRow, moveCol)){
-                                    if(getPlayerColor()=='B'){
-                                        addScoreB();
-                                    }
-                                    else if(getPlayerColor()=='R'){
-                                        addScoreR();
-                                    }
                                 }
-                                cb.move(selectRow,selectCol, moveRow, moveCol);
                                 if(cb.hasMoreCuts(getPlayerColor())){
                                     manual=true;
                                 }else{
@@ -283,8 +276,8 @@ public final class BoardPanel extends JPanel {
             
             labelMovesB.setText(Integer.toString(movesB));
             labelMovesR.setText(Integer.toString(movesR));
-            labelScoreB.setText(Integer.toString(scoreB));
-            labelScoreR.setText(Integer.toString(scoreR));
+            labelScoreB.setText(Integer.toString(getScoreB()));
+            labelScoreR.setText(Integer.toString(getScoreR()));
             
         }
         
@@ -373,4 +366,23 @@ public final class BoardPanel extends JPanel {
     public void addScoreR(){
         scoreR++;
     }
+    public int getScoreB(){
+        int score=0;
+        for(Chip redchip: checkersBoard.getTypeRList()){
+            if (!redchip.isOnBoard()) {
+                score++;
+            }
+        }
+        return score;
+    }
+    public int getScoreR(){
+        int score=0;
+        for(Chip blackchip: checkersBoard.getTypeBList()){
+            if(!blackchip.isOnBoard())
+                score++;
+        }
+        return score;
+    }
+     
+    
 }

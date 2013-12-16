@@ -161,16 +161,7 @@ public class GameEngine {
         }
         else if(checkersFrame.getPlayerColor()=='R'){
             checkersFrame.addMovesB();
-        }                                
-        if(cb.isACut(sR, sC, eR, eC)){
-            if(checkersFrame.getPlayerColor()=='B'){
-                checkersFrame.addScoreR();
-            }
-            else if(checkersFrame.getPlayerColor()=='R'){
-                checkersFrame.addScoreB();
-            }
-        }
-        
+        }        
         System.out.println("move" + sR + "," + sC + "," + eR + "," + eC);
     }
     public void waitForUserMove(){

@@ -163,11 +163,11 @@ public class CheckerBoard {
         return false;
     }
     
-    public boolean isACut(int sRow, int sCol, int dRow, int dCol) { //this will be always used after true in isMoveable()
-        char tmpType = checkersBoard[sRow][sCol];
+    /*public boolean isACut(int sRow, int sCol, int dRow, int dCol) { //this will be always used after true in isMoveable()
+        char tmpType = checkersBoard[dRow][dCol];
         Chip tmpChip;
         if (tmpType == typeR) {
-            tmpChip = typeRList.get(typeRList.indexOf(new Chip(sCol, sRow)));
+            tmpChip = typeRList.get(typeRList.indexOf(new Chip(dCol, dRow)));
             if(!tmpChip.isKing()){
                 if(sRow-dRow == (-2) && Math.abs(sCol-dCol)== 2){
                     return true;
@@ -180,7 +180,7 @@ public class CheckerBoard {
             }
         }
         else if (tmpType == typeB) {
-            tmpChip = typeBList.get(typeBList.indexOf(new Chip(sCol, sRow)));
+            tmpChip = typeBList.get(typeBList.indexOf(new Chip(dCol, dRow)));
             if(!tmpChip.isKing()){
                 if(sRow-dRow == 2 && Math.abs(sCol-dCol)== 2){
                     return true;
@@ -193,7 +193,7 @@ public class CheckerBoard {
             }
         }
         return false;
-    }
+    }*/
 
     public boolean cutPiece(int attackerRow, int attackerCol, int victimRow, int victimCol) {
         char tmpAttacker, tmpVictim;
