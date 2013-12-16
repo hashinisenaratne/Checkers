@@ -165,6 +165,12 @@ public class CheckerBoard {
 
     public boolean cutPiece(int attackerRow, int attackerCol, int victimRow, int victimCol) {
         char tmpAttacker, tmpVictim;
+        if(attackerRow<0 || attackerCol<0 || victimRow<0 || victimCol<0){
+            return false;
+        }
+        if(attackerRow>=boardSize || attackerCol>=boardSize || victimRow>=boardSize || victimCol>=boardSize){
+            return false;
+        }
         if (checkersBoard[attackerRow][attackerCol] == empty || checkersBoard[victimRow][victimCol] == empty) {
             return false;
         } else {

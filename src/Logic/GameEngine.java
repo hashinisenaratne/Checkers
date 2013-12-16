@@ -151,6 +151,9 @@ public class GameEngine {
             eR = sR +(int) Math.pow(-1,(int)(Math.random() * 100));
             eC = sC+(int) Math.pow(-1,(int)(Math.random() * 100));
             //System.out.println("nomove" + sR + "," + sC + "," + eR + "," + eC);
+            if(cb.cutPiece(sR, sC, eR, eC)){
+                break;
+            }
         } while (!cb.movePieceByType(type,sR, sC, eR, eC));// || !cb.cutPiece(sR, sC, eR, eC));
         System.out.println("move" + sR + "," + sC + "," + eR + "," + eC);
     }
