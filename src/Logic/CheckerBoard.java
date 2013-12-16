@@ -194,7 +194,7 @@ public class CheckerBoard {
                     }
                     return true;
                 }
-                if (isMoveable(attackerRow, attackerCol, victimRow - 1, victimCol + 1)) {
+                else if (isMoveable(attackerRow, attackerCol, victimRow - 1, victimCol + 1)) {
                     movePiece(attackerRow, attackerCol, victimRow - 1, victimCol + 1);
                     lastCutPieceRow=victimRow-1;
                     lastCutPieceCol=victimCol+1;
@@ -208,7 +208,7 @@ public class CheckerBoard {
                     return true;
                 }
             }
-            if (attackerRow < victimRow) {
+            else if (attackerRow < victimRow) {
                 if (isMoveable(attackerRow, attackerCol, victimRow + 1, victimCol - 1)) {
                     movePiece(attackerRow, attackerCol, victimRow + 1, victimCol - 1);
                     lastCutPieceRow=victimRow+1;
@@ -222,7 +222,7 @@ public class CheckerBoard {
                     }
                     return true;
                 }
-                if (isMoveable(attackerRow, attackerCol, victimRow + 1, victimCol + 1)) {
+                else if (isMoveable(attackerRow, attackerCol, victimRow + 1, victimCol + 1)) {
                     movePiece(attackerRow, attackerCol, victimRow + 1, victimCol + 1);
                     lastCutPieceRow=victimRow+1;
                     lastCutPieceCol=victimCol+1;
@@ -578,6 +578,13 @@ public class CheckerBoard {
     public boolean hasMoreCuts(char type) {
         if(lastCutPieceRow!=-1){
             return hasCuts(lastCutPieceRow, lastCutPieceCol);
+        }
+        return false;
+    }
+    
+    public boolean cutPieceByType(char type,int attackerRow, int attackerCol, int victimRow, int victimCol){
+        if(Character.toLowerCase(checkersBoard[attackerRow][attackerCol])== Character.toLowerCase(type)){
+            return cutPiece(attackerRow, attackerCol, victimRow, victimCol);
         }
         return false;
     }
