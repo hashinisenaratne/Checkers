@@ -142,7 +142,10 @@ public final class BoardPanel extends JPanel {
                             }
                         }
                         else if(select && !move){
-                            if(!(cb.isUsed('r', row(e.getY ()), col(e.getX ()))) &&
+                            if(row(e.getY ())== selectRow && col(e.getX ())== selectCol){
+                                select=false;
+                            }
+                            else if(!(cb.isUsed('r', row(e.getY ()), col(e.getX ()))) &&
                                     !(cb.isUsed('b', row(e.getY ()), col(e.getX ()))) &&
                                     !(cb.isUsed('#', row(e.getY ()), col(e.getX ())))){
                                 moveRow= row(e.getY ());
@@ -161,7 +164,7 @@ public final class BoardPanel extends JPanel {
                                     manual=true;
                                 }else{
                                     manual=false;
-                                }
+                                }                               
                             }
                             else{
                                 JOptionPane.showMessageDialog(

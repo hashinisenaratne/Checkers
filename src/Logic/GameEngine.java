@@ -98,29 +98,46 @@ public class GameEngine {
     public void process() {
         waitUntilGamestated();
         while (gameState != 2) {
-            if(Character.toLowerCase(manualColour)!=cb.getTypeB()){
-                takeMove(cb.getTypeB());
-                checkersFrame.setManualMove();
-                redrawGUI();
-            }else{
-                waitForUserMove();
+            if(Character.toLowerCase(manualColour)!=cb.getTypeB()){ //manual color is red
+                if(!cb.hasMoves(cb.getTypeB())){
+                    gameState=2;
+                    System.out.println("Red Wins");
+                    break;
+                }
+                else{
+                    takeMove(cb.getTypeB());
+                    redrawGUI();
+                }
+                if(!cb.hasMoves(cb.getTypeR())){
+                    gameState=2;
+                    System.out.println("Black Wins");
+                    break;
+                }
+                else{                    
+                    checkersFrame.setManualMove();
+                    waitForUserMove();
+                }
             }
-            if(!cb.hasMoves(cb.getTypeR())){
-                gameState=2;
-                System.out.println("Black Wins");
-                break;
-            }
-            if(Character.toLowerCase(manualColour)!=cb.getTypeR()){
-                takeMove(cb.getTypeR());
-                checkersFrame.setManualMove();
-                redrawGUI();
-            }else{
-                waitForUserMove();
-            }
-            if(!cb.hasMoves(cb.getTypeB())){
-                gameState=2;
-                System.out.println("Red Wins");
-                break;
+            
+            if(Character.toLowerCase(manualColour)!=cb.getTypeR()){ //manual color is black
+                if(!cb.hasMoves(cb.getTypeB())){
+                    gameState=2;
+                    System.out.println("Red Wins");
+                    break;
+                }
+                else{                    
+                    checkersFrame.setManualMove();
+                    waitForUserMove();
+                }
+                if(!cb.hasMoves(cb.getTypeR())){
+                    gameState=2;
+                    System.out.println("Black Wins");
+                    break;
+                }
+                else{
+                    takeMove(cb.getTypeR());
+                    redrawGUI();
+                }
             }
         }
         System.out.println("Game Over");
@@ -139,7 +156,7 @@ public class GameEngine {
     }
     public void waitForUserMove(){
         while(!checkersFrame.isUserMoved()){
-            
+            Thread.yield();
         }
     }
 }
