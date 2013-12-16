@@ -1,6 +1,7 @@
 package View;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagLayout;
@@ -20,6 +21,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import javax.swing.JPanel;
@@ -35,9 +37,11 @@ public final class BoardPanel extends JPanel {
     Logic.CheckerBoard checkersBoard;
     private final JButton startButton;
     JCheckBox checkBoxBlack, checkBoxRed;
+    JLabel labelScoreB, labelScoreR, labelMovesB, labelMovesR;
     static JPanel boardPanel;
     int selectRow=0,selectCol=0, moveRow=0,moveCol=0;
     boolean manual=true,select=false,move=false;
+    int scoreR=0, scoreB=0, movesR=0, movesB=0;
     
     public BoardPanel(final Logic.CheckerBoard cb) {
         
@@ -59,12 +63,6 @@ public final class BoardPanel extends JPanel {
         ImageIcon crownIcon = new ImageIcon(this.getClass().getResource("crown.png"));
         crownImg = crownIcon.getImage();
         
-        checkBoxBlack = new JCheckBox("");
-        checkBoxRed = new JCheckBox("");
-        ButtonGroup bg = new ButtonGroup();
-        bg.add(checkBoxBlack);
-        bg.add(checkBoxRed);
-        //setLayout(new GridBagLayout());
         startButton = new JButton(""); //button to start the game
         this.setLayout(null);
         startButton.setBounds(300, 510, 200, 60);
@@ -79,7 +77,13 @@ public final class BoardPanel extends JPanel {
             }
         });
         this.add(startButton);
-        
+                        
+        checkBoxBlack = new JCheckBox("");
+        checkBoxRed = new JCheckBox("");
+        ButtonGroup bg = new ButtonGroup();
+        bg.add(checkBoxBlack);
+        bg.add(checkBoxRed);
+                
         checkBoxBlack.setBounds(330, 310, 100, 50);
         checkBoxRed.setBounds(330, 360, 100, 50);
         checkBoxBlack.setOpaque(true);
@@ -109,14 +113,27 @@ public final class BoardPanel extends JPanel {
         
         this.add(checkBoxBlack);
         this.add(checkBoxRed);
-
-        //creating the chip arrays and set column, row positions for each
-        /*blackchips = new Logic.Chip[blackMax];
-        redchips = new Logic.Chip[redMax];
-        for (int i = 0; i < 12; i++) {
-            redchips[i] = new Logic.Chip((i/4 % 2 != 1) ? (i%4) * 2 : (i%4) * 2+1, i / 4);
-            blackchips[i] = new Logic.Chip(0, 7 - i / 4);
-        }*/
+        
+        labelScoreB = new JLabel(Integer.toString(scoreB));
+        labelScoreR = new JLabel(Integer.toString(scoreR));
+        labelMovesB = new JLabel(Integer.toString(movesB));
+        labelMovesR = new JLabel(Integer.toString(movesR));
+        labelScoreB.setFont(new Font("Serif", Font.PLAIN, 30));
+        labelScoreR.setFont(new Font("Serif", Font.PLAIN, 30));
+        labelMovesB.setFont(new Font("Serif", Font.PLAIN, 30));
+        labelMovesR.setFont(new Font("Serif", Font.PLAIN, 30));
+        labelScoreB.setForeground(Color.WHITE);
+        labelScoreR.setForeground(Color.WHITE);
+        labelMovesB.setForeground(Color.WHITE);
+        labelMovesR.setForeground(Color.WHITE);
+        labelScoreB.setBounds(620, 380, 200, 60);
+        labelScoreR.setBounds(620, 100, 200, 60);
+        labelMovesB.setBounds(720, 430, 200, 60);
+        labelMovesR.setBounds(720, 150, 200, 60);
+        this.add(labelScoreB);
+        this.add(labelScoreR);
+        this.add(labelMovesB);
+        this.add(labelMovesR);
         
         updateChipInfo();
         
@@ -191,10 +208,21 @@ public final class BoardPanel extends JPanel {
         //if in the welcome mode
         if (gameState == 0) {
             g2d.drawImage(welcomeImg, 0, 0, null); //show the welcome screen
+            startButton.setVisible(true);
+            checkBoxBlack.setVisible(true);
+            checkBoxRed.setVisible(true);
+            labelMovesB.setVisible(false);
+            labelMovesR.setVisible(false);
+            labelScoreB.setVisible(false);
+            labelScoreR.setVisible(false);
         } else {
             startButton.setVisible(false);
             checkBoxBlack.setVisible(false);
             checkBoxRed.setVisible(false);
+            labelMovesB.setVisible(true);
+            labelMovesR.setVisible(true);
+            labelScoreB.setVisible(true);
+            labelScoreR.setVisible(true);
             g2d.drawImage(boardImg, 0, 0, null);
             updateChipInfo();
             
@@ -238,6 +266,12 @@ public final class BoardPanel extends JPanel {
                 g2d.drawLine(pixelXPos(moveCol)+70, pixelYPos(moveRow), 
                         pixelXPos(moveCol)+70, pixelYPos(moveRow)+70);
             }
+            
+            labelMovesB.setText(Integer.toString(movesB));
+            labelMovesR.setText(Integer.toString(movesR));
+            labelScoreB.setText(Integer.toString(scoreB));
+            labelScoreR.setText(Integer.toString(scoreR));
+            
         }
         
         this.paintComponents(g);
@@ -310,4 +344,19 @@ public final class BoardPanel extends JPanel {
         manual=true;
     }
     
+    public void addMovesB(){
+        movesB++;
+    }
+    
+    public void addMovesR(){
+        movesR++;
+    }
+    
+    public void addScoreB(){
+        scoreB++;
+    }
+    
+    public void addScoreR(){
+        scoreR++;
+    }
 }
