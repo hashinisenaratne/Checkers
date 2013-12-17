@@ -22,6 +22,11 @@ public class CheckersFrame extends JFrame {
     public int getGameState(){
         return BoardPanel.getGameState();
     }
+    
+    public void setGameState(int state){
+        panel.setGameState(state);
+    }
+    
     public char getPlayerColor(){
         return BoardPanel.getPlayerColor();
     }
@@ -40,11 +45,7 @@ public class CheckersFrame extends JFrame {
         panel.addMovesR();
     }
     
-    public void addScoreB(){
-        panel.addScoreB();
-    }
-    
-    public void addScoreR(){
-        panel.addScoreR();
+    public void setWin(boolean bwin){
+        panel.setWin(bwin);
     }
 }

@@ -36,12 +36,12 @@ public final class BoardPanel extends JPanel {
     Logic.Chip[] redchips;
     int redMax, blackMax;
     Logic.CheckerBoard checkersBoard;
-    private final JButton startButton;
+    private final JButton startButton, homeButton;
     JCheckBox checkBoxBlack, checkBoxRed;
-    JLabel labelScoreB, labelScoreR, labelMovesB, labelMovesR;
+    JLabel labelScoreB, labelScoreR, labelMovesB, labelMovesR, labelResults;
     static JPanel boardPanel;
     int selectRow=0,selectCol=0, moveRow=0,moveCol=0;
-    boolean manual=true,select=false,move=false;
+    boolean manual=true,select=false,move=false, blackWin=true;
     int scoreR=0, scoreB=0, movesR=0, movesB=0;
     
     public BoardPanel(final Logic.CheckerBoard cb) {
@@ -78,7 +78,24 @@ public final class BoardPanel extends JPanel {
             }
         });
         this.add(startButton);
-                        
+                   
+        homeButton= new JButton("");
+        homeButton.setBounds(615, 530, 150, 50);
+        homeButton.setContentAreaFilled(true);
+        homeButton.setFont(new Font("Serif", Font.PLAIN, 25));
+        homeButton.setForeground(Color.WHITE);
+        homeButton.setBackground(Color.black);
+        homeButton.setFocusPainted(false);
+        homeButton.setText("Home");
+        homeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BoardPanel.gameState = 0;
+                BoardPanel.boardPanel.repaint();
+            }
+        });
+        this.add(homeButton);        
+        
         checkBoxBlack = new JCheckBox("");
         checkBoxRed = new JCheckBox("");
         ButtonGroup bg = new ButtonGroup();
@@ -119,22 +136,27 @@ public final class BoardPanel extends JPanel {
         labelScoreR = new JLabel(Integer.toString(scoreR));
         labelMovesB = new JLabel(Integer.toString(movesB));
         labelMovesR = new JLabel(Integer.toString(movesR));
+        labelResults = new JLabel("");
         labelScoreB.setFont(new Font("Serif", Font.PLAIN, 30));
         labelScoreR.setFont(new Font("Serif", Font.PLAIN, 30));
         labelMovesB.setFont(new Font("Serif", Font.PLAIN, 30));
         labelMovesR.setFont(new Font("Serif", Font.PLAIN, 30));
+        labelResults.setFont(new Font("Serif", Font.PLAIN, 25));
         labelScoreB.setForeground(Color.WHITE);
         labelScoreR.setForeground(Color.WHITE);
         labelMovesB.setForeground(Color.WHITE);
         labelMovesR.setForeground(Color.WHITE);
+        labelResults.setForeground(Color.WHITE);
         labelScoreB.setBounds(620, 380, 200, 60);
         labelScoreR.setBounds(620, 100, 200, 60);
         labelMovesB.setBounds(720, 430, 200, 60);
         labelMovesR.setBounds(720, 150, 200, 60);
+        labelResults.setBounds(635, 320, 200, 60);
         this.add(labelScoreB);
         this.add(labelScoreR);
         this.add(labelMovesB);
         this.add(labelMovesR);
+        this.add(labelResults);
         
         updateChipInfo();
         
@@ -222,6 +244,9 @@ public final class BoardPanel extends JPanel {
             labelMovesR.setVisible(false);
             labelScoreB.setVisible(false);
             labelScoreR.setVisible(false);
+            labelResults.setVisible(false);
+            labelResults.setText("");
+            homeButton.setVisible(false);
         } else {
             startButton.setVisible(false);
             checkBoxBlack.setVisible(false);
@@ -279,6 +304,27 @@ public final class BoardPanel extends JPanel {
             labelScoreB.setText(Integer.toString(getScoreB()));
             labelScoreR.setText(Integer.toString(getScoreR()));
             
+            if(gameState==2){
+                homeButton.setVisible(true);
+                if(getPlayerColor()=='B'){
+                    if(blackWin){
+                        labelResults.setText("You Win");
+                    }
+                    else{
+                        labelResults.setText("You Lose");
+                    }                        
+                }
+                else if(getPlayerColor()=='R'){
+                    if(!blackWin){
+                        labelResults.setText("You Win");
+                    }
+                    else{
+                        labelResults.setText("You Lose");
+                    } 
+                }
+                labelResults.setVisible(true);                
+            }
+            
         }
         
         this.paintComponents(g);
@@ -332,6 +378,10 @@ public final class BoardPanel extends JPanel {
     public static int getGameState() {
         return gameState;
     }
+    
+    public void setGameState(int state){
+        gameState= state;
+    }
 
     public static char getPlayerColor() {
         if(playerColor==0)
@@ -359,13 +409,6 @@ public final class BoardPanel extends JPanel {
         movesR++;
     }
     
-    public void addScoreB(){
-        scoreB++;
-    }
-    
-    public void addScoreR(){
-        scoreR++;
-    }
     public int getScoreB(){
         int score=0;
         for(Chip redchip: checkersBoard.getTypeRList()){
@@ -384,5 +427,7 @@ public final class BoardPanel extends JPanel {
         return score;
     }
      
-    
+    public void setWin(boolean bwin){
+        blackWin = bwin;
+    }
 }
