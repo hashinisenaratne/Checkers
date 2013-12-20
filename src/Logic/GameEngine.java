@@ -150,17 +150,23 @@ public class GameEngine {
     }
 
     public void takeMove(char type) {
-        int sR, sC, eR, eC;
-        do {
-            sR = (int) ((Math.random() * 10) % 8);
-            sC = (int) ((Math.random() * 10) % 8);
-            eR = sR +(int) Math.pow(-1,(int)(Math.random() * 100));
-            eC = sC+(int) Math.pow(-1,(int)(Math.random() * 100));
-            //System.out.println("nomove" + sR + "," + sC + "," + eR + "," + eC);
-            if(cb.cutPieceByType(type,sR, sC, eR, eC)){
-                break;
-            }
-        } while (!cb.movePieceByType(type,sR, sC, eR, eC));// || !cb.cutPiece(sR, sC, eR, eC));
+//        int sR, sC, eR, eC;
+//        do {
+//            sR = (int) ((Math.random() * 10) % 8);
+//            sC = (int) ((Math.random() * 10) % 8);
+//            eR = sR +(int) Math.pow(-1,(int)(Math.random() * 100));
+//            eC = sC+(int) Math.pow(-1,(int)(Math.random() * 100));
+//            //System.out.println("nomove" + sR + "," + sC + "," + eR + "," + eC);
+//            if(cb.cutPieceByType(type,sR, sC, eR, eC)){
+//                break;
+//            }
+//        } while (!cb.movePieceByType(type,sR, sC, eR, eC));// || !cb.cutPiece(sR, sC, eR, eC));
+        
+        int[] move = cb.getMoveFromMinMax(type);
+        if(!cb.cutPieceByType(type,move[0], move[1], (move[0]+move[2])/2, (move[1]+move[3])/2))
+        {
+            cb.movePieceByType(type,move[0], move[1], move[2], move[3]);
+        }
         
         if(checkersFrame.getPlayerColor()=='B'){
             checkersFrame.addMovesR();
@@ -168,7 +174,7 @@ public class GameEngine {
         else if(checkersFrame.getPlayerColor()=='R'){
             checkersFrame.addMovesB();
         }        
-        System.out.println("move" + sR + "," + sC + "," + eR + "," + eC);
+        //System.out.println("move" + sR + "," + sC + "," + eR + "," + eC);
     }
     public void waitForUserMove(){
         while(!checkersFrame.isUserMoved()){
