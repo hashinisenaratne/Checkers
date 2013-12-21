@@ -162,7 +162,12 @@ public class GameEngine {
 //            }
 //        } while (!cb.movePieceByType(type,sR, sC, eR, eC));// || !cb.cutPiece(sR, sC, eR, eC));
         
-        int[] move = cb.getMoveFromMinMax(type);
+        boolean isCut = false;
+        if(!cb.getAllCaptures(cb.checkersBoard, type, null).isEmpty())
+        {
+            isCut=true;
+        }
+        int[] move = cb.getMoveFromMinMax(type,null);
         if(!cb.cutPieceByType(type,move[0], move[1], (move[0]+move[2])/2, (move[1]+move[3])/2))
         {
             cb.movePieceByType(type,move[0], move[1], move[2], move[3]);
@@ -174,6 +179,27 @@ public class GameEngine {
         else if(checkersFrame.getPlayerColor()=='R'){
             checkersFrame.addMovesB();
         }        
+        Thread.yield();
+        if(isCut)
+        {
+            //while(cb.hasCuts(cb.checkersBoard,move[2], move[3]))
+            while(!cb.getAllCaptures(cb.checkersBoard, type, new Chip(move[2], move[3])).isEmpty())
+            {
+                move = cb.getMoveFromMinMax(type,new Chip(move[2], move[3]));
+                if(!cb.cutPieceByType(type,move[0], move[1], (move[0]+move[2])/2, (move[1]+move[3])/2))
+                {
+                    cb.movePieceByType(type,move[0], move[1], move[2], move[3]);
+                }
+
+                if(checkersFrame.getPlayerColor()=='B'){
+                    checkersFrame.addMovesR();
+                }
+                else if(checkersFrame.getPlayerColor()=='R'){
+                    checkersFrame.addMovesB();
+                }
+                Thread.yield();
+            }
+        }
         //System.out.println("move" + sR + "," + sC + "," + eR + "," + eC);
     }
     public void waitForUserMove(){

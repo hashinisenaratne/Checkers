@@ -199,18 +199,21 @@ public final class BoardPanel extends JPanel {
                         }
                         else if(select && move && moveRow== row(e.getY ()) && moveCol== col(e.getX ())){
                             if(cb.isMoveable(selectRow,selectCol, moveRow, moveCol)){
-                                cb.move(selectRow,selectCol, moveRow, moveCol);
-                                if(getPlayerColor()=='B'){
-                                    addMovesB();
+                                if((!cb.getAllCaptures(cb.checkersBoard, getPlayerColor(),null).isEmpty()&& Math.abs(selectRow-moveRow) == 2) || cb.getAllCaptures(cb.checkersBoard, getPlayerColor(), null).isEmpty())
+                                {
+                                    cb.move(selectRow,selectCol, moveRow, moveCol);
+                                    if(getPlayerColor()=='B'){
+                                        addMovesB();
+                                    }
+                                    else if(getPlayerColor()=='R'){
+                                        addMovesR();
+                                    }
+                                    if(cb.hasMoreCuts(getPlayerColor())){
+                                        manual=true;
+                                    }else{
+                                        manual=false;
+                                    }   
                                 }
-                                else if(getPlayerColor()=='R'){
-                                    addMovesR();
-                                }
-                                if(cb.hasMoreCuts(getPlayerColor())){
-                                    manual=true;
-                                }else{
-                                    manual=false;
-                                }                               
                             }
                             else{
                                 JOptionPane.showMessageDialog(

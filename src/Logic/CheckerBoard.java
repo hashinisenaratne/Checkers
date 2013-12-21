@@ -16,13 +16,13 @@ import java.util.Random;
  */
 public class CheckerBoard {
 
-    private char[][] checkersBoard;
+    public char[][] checkersBoard;
     private int boardSize;
     private char typeR, typeB, empty, invalid;
     private List<Chip> typeRList;
     private List<Chip> typeBList;
     private int lastCutPieceRow,lastCutPieceCol;
-    private int maxDepth = 4;
+    private int maxDepth = 6;
 
     public CheckerBoard(int size) {
         boardSize = size;
@@ -625,6 +625,21 @@ public class CheckerBoard {
         }
         return false;
     }
+    public boolean hasCuts(char[][] board, int row, int col) {
+        if (canMove(board, row, col, row + 2, col + 2)) {
+            return true;
+        }
+        if (canMove(board,row, col, row - 2, col + 2)) {
+            return true;
+        }
+        if (canMove(board,row, col, row - 2, col - 2)) {
+            return true;
+        }
+        if (canMove(board,row, col, row + 2, col - 2)) {
+            return true;
+        }
+        return false;
+    }
 
     public boolean hasMoreCuts(char type) {
         if(lastCutPieceRow!=-1){
@@ -673,7 +688,7 @@ public class CheckerBoard {
 
 	if(Math.abs(sRow - dRow) ==2 && Math.abs(sCol - dCol) == 2)
         {
-                if(board[dRow][dCol] == empty && board[(sRow + dRow)/2][(sCol + dCol)/2] != empty && board[sRow ][sCol] != board[(sRow + dRow)/2][(sCol + dCol)/2])
+                if(board[dRow][dCol] == empty && board[(sRow + dRow)/2][(sCol + dCol)/2] != empty && Character.toLowerCase(board[sRow ][sCol]) != Character.toLowerCase(board[(sRow + dRow)/2][(sCol + dCol)/2]))
                 {
                     if(board[sRow][sCol] == RKing || board[sRow][sCol] == BKing)
                     {
@@ -692,27 +707,49 @@ public class CheckerBoard {
 	}
 	return false;
 }
-    List<int[]> getAllCaptures(char[][] board, char colour)
+    public List<int[]> getAllCaptures(char[][] board, char colour, Chip predecessorOfMultiMove)
     {
         ArrayList<int[]> ret = new ArrayList<int[]>();
-        for( int row=0; row<8; row++)
+        if(predecessorOfMultiMove == null)
         {
-            for (int col=0; col<8; col++)
+            for( int row=0; row<8; row++)
             {
-                if(Character.toLowerCase(board[row][col])==colour)
+                for (int col=0; col<8; col++)
                 {
-                    if (canMove(board, row, col, row + 2, col + 2)) {
-                        ret.add(new int[]{row, col, row + 2, col + 2});
+                    if(Character.toLowerCase(board[row][col])==Character.toLowerCase(colour))
+                    {
+                        if (canMove(board, row, col, row + 2, col + 2)) {
+                            ret.add(new int[]{row, col, row + 2, col + 2});
+                        }
+                        if (canMove(board, row, col, row - 2, col + 2)) {
+                            ret.add(new int[]{row, col, row - 2, col + 2});
+                        }
+                        if (canMove(board, row, col, row - 2, col - 2)) {
+                            ret.add(new int[]{row, col, row - 2, col - 2});
+                        }
+                        if (canMove(board, row, col, row + 2, col - 2)) {
+                            ret.add(new int[]{row, col, row + 2, col - 2});
+                        }
                     }
-                    if (canMove(board, row, col, row - 2, col + 2)) {
-                        ret.add(new int[]{row, col, row - 2, col + 2});
-                    }
-                    if (canMove(board, row, col, row - 2, col - 2)) {
-                        ret.add(new int[]{row, col, row - 2, col - 2});
-                    }
-                    if (canMove(board, row, col, row + 2, col - 2)) {
-                        ret.add(new int[]{row, col, row + 2, col - 2});
-                    }
+                }
+            }
+        }
+        else
+        {
+            int row = predecessorOfMultiMove.getRow(), col =predecessorOfMultiMove.getCol();
+            if(Character.toLowerCase(board[row][col])==Character.toLowerCase(colour))
+            {
+                if (canMove(board, row, col, row + 2, col + 2)) {
+                    ret.add(new int[]{row, col, row + 2, col + 2});
+                }
+                if (canMove(board, row, col, row - 2, col + 2)) {
+                    ret.add(new int[]{row, col, row - 2, col + 2});
+                }
+                if (canMove(board, row, col, row - 2, col - 2)) {
+                    ret.add(new int[]{row, col, row - 2, col - 2});
+                }
+                if (canMove(board, row, col, row + 2, col - 2)) {
+                    ret.add(new int[]{row, col, row + 2, col - 2});
                 }
             }
         }
@@ -726,7 +763,7 @@ public class CheckerBoard {
         {
             for (int col=0; col<8; col++)
             {
-                if(Character.toLowerCase(board[row][col])==colour)
+                if(Character.toLowerCase(board[row][col])==Character.toLowerCase(colour))
                 {
                     if (canMove(board, row, col, row + 1, col + 1)) {
                         ret.add(new int[]{row, col, row + 1, col + 1});
@@ -754,9 +791,9 @@ public static char[][] cloneArray(char[][] src) {
     }
     return target;
 }
-    int[] getMoveFromMinMax (char colour)//assumed that there is at least one possible move
+    int[] getMoveFromMinMax (char colour, Chip predecessorOfMultiMove)//assumed that there is at least one possible move
 {
-    char[][] currentBoard = new char[boardSize][boardSize];
+    /*char[][] currentBoard = new char[boardSize][boardSize];
     for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
                 if ((i + j) % 2 == 0) {
@@ -795,9 +832,17 @@ public static char[][] cloneArray(char[][] src) {
                 currentBoard[piece.getRow()][piece.getCol()] = 'r';
             }
         }
-    }
+    }*/
+    char[][] currentBoard = checkersBoard;
+    for (int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
+                System.out.print(currentBoard[i][j]);
+            }
+            System.out.println();
+        }
+    System.out.println();
     
-    List<int[]> possibleMoves = getAllCaptures(currentBoard, colour);
+    List<int[]> possibleMoves = getAllCaptures(currentBoard, colour,predecessorOfMultiMove);
     int tmpMax;
     int[] bestMove = null;
 	if(!possibleMoves.isEmpty())// check if there are possible captures
@@ -808,6 +853,23 @@ public static char[][] cloneArray(char[][] src) {
 		{
 			Node node = new Node(1,cloneArray(currentBoard));
 			node.makeMove(move);
+                        if(hasCuts(node.board, move[2], move[3]))
+                        {
+//                            List<int[]> multiMoves = getAllCaptures(node.board, colour, new Chip(move[2], move[3]));
+//                            for(int[] multiMove : multiMoves)
+//                            {
+//                                node = new Node(1,cloneArray(currentBoard));
+//                                node.makeMove(multiMove);
+//                                int value = findValue(node, colour, true);
+//                                if( value > tmpMax)
+//                                {
+//                                        tmpMax= value;
+//                                        bestMove = move;
+//                                } 
+//                            }
+//                            continue;
+                            return move;
+                        }
                         int value = findValue(node, colour, true);
 			if( value > tmpMax)
 			{
@@ -818,8 +880,8 @@ public static char[][] cloneArray(char[][] src) {
 		return bestMove;
 	}
 
-	tmpMax = Integer.MIN_VALUE;
 	possibleMoves = getAllNonCaptures(currentBoard, colour);
+	tmpMax = Integer.MIN_VALUE;
 
 	for(int[] move : possibleMoves)
 	{
@@ -835,6 +897,11 @@ public static char[][] cloneArray(char[][] src) {
 	return bestMove;
 
 }
+    
+char invertColour(char colour)
+{
+    return Character.toLowerCase(colour)=='r'?'b':'r';
+}
 
 int findValue(Node node, char colour, boolean isMin)
 {
@@ -843,7 +910,7 @@ int findValue(Node node, char colour, boolean isMin)
 		return calcHeuristic(node.board, colour);
 	}
 	
-        List<int[]> possibleMoves = getAllCaptures(node.board, colour);
+        List<int[]> possibleMoves = getAllCaptures(node.board, (node.depth%2==1)?invertColour(colour):colour, null);
         int tmp;
 	if(!possibleMoves.isEmpty() && !isMin)// check if there are possible captures
 	{
@@ -853,6 +920,10 @@ int findValue(Node node, char colour, boolean isMin)
 		{
 			Node newNode = new Node(node.depth+1,cloneArray(node.board));
 			newNode.makeMove(move);
+                        if(hasCuts(newNode.board, move[2], move[3]))
+                        {
+                            return 1000;
+                        }
                         int value = findValue(newNode, colour, true);
 			if( value > tmp)
 			{
@@ -870,7 +941,11 @@ int findValue(Node node, char colour, boolean isMin)
 		{
 			Node newNode = new Node(node.depth+1,cloneArray(node.board));
 			newNode.makeMove(move);
-                        int value = findValue(newNode, colour, true);
+                        if(hasCuts(newNode.board, move[2], move[3]))
+                        {
+                            return -1000;
+                        }
+                        int value = findValue(newNode, colour, false);
 			if( value < tmp)
 			{
 				tmp= value;
@@ -879,9 +954,9 @@ int findValue(Node node, char colour, boolean isMin)
 		return tmp;
 	}
         
-        possibleMoves = getAllNonCaptures(node.board, colour);
+        possibleMoves = getAllNonCaptures(node.board, (node.depth%2==1)?invertColour(colour):colour);
         
-	if(!possibleMoves.isEmpty() && !isMin)// check if there are possible captures
+	if(!possibleMoves.isEmpty() && !isMin)// check if there are possible non captures
 	{
 		tmp = Integer.MIN_VALUE;
 
@@ -898,7 +973,7 @@ int findValue(Node node, char colour, boolean isMin)
 		return tmp;
 	}
         
-	if(!possibleMoves.isEmpty() && isMin)// check if there are possible captures
+	if(!possibleMoves.isEmpty() && isMin)// check if there are possible non captures
 	{
 		tmp = Integer.MAX_VALUE;
 
@@ -906,7 +981,7 @@ int findValue(Node node, char colour, boolean isMin)
 		{
 			Node newNode = new Node(node.depth+1,cloneArray(node.board));
 			newNode.makeMove(move);
-                        int value = findValue(newNode, colour, true);
+                        int value = findValue(newNode, colour, false);
 			if( value < tmp)
 			{
 				tmp= value;
@@ -920,8 +995,59 @@ int findValue(Node node, char colour, boolean isMin)
 
 int calcHeuristic(char[][] board, char colour)
 {
-    return new Random().nextInt(100);
+    //return new Random().nextInt(100);
+    //return HeuristicUtil.calcHeuristicValue(board, colour);
+    return eval(board, colour);
 }
+
+final static int normal = 100;         //one checker worth 100
+final static int king=200;             //a King's worth
+final static int pos=1;                //one position along the -j worth 1
+final static int edge=10;               // effect of king being on the edge
+
+
+public int eval(char [][] board, char colour){
+        int score=0;
+
+        for(int i=0;i<8;i++){
+            for(int j=0;j<8;j++){
+	            if (board[i][j] == typeR)
+                {
+                      score-=normal;
+                      score-=pos*i*i;
+                }
+
+                else if (board[i][j] ==RKing){
+                    score-=king;
+                    if (i==0 || i==7)
+                        score += edge;
+                    if (j==0 || j==7)
+                        score += edge;
+                }
+
+                else if (board[i][j] == typeB)
+                {
+                      score+=normal;
+                      score+=pos*(7-i)*(7-i);
+                }
+
+                else if (board[i][j] == BKing){
+                    score+=king;
+                    if (i==0 || i==7)
+                        score -= edge;
+                    if (j==0 || j==7)
+                        score -= edge;
+                }
+            }
+        }
+        //score += (int)(Math.random() * 10);                    //Adds a random weight
+
+        if(Character.toLowerCase(colour)== typeR)
+        {
+            score*=-1;
+        }
+        return score;
+    }
 }
 
 
@@ -942,6 +1068,9 @@ class Node
         char tmp = board[move[0]][move[1]];
         board[move[0]][move[1]] = '_';
         board[move[2]][move[3]] = tmp;
-        board[(move[0]+move[2])/2][(move[1]+move[3])/2] = '_';
+        if(Math.abs(move[0]-move[2]) == 2)
+        {
+            board[(move[0]+move[2])/2][(move[1]+move[3])/2] = '_';
+        }
     }
 }

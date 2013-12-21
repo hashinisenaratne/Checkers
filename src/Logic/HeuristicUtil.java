@@ -5,6 +5,7 @@
 package Logic;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -20,6 +21,8 @@ public class HeuristicUtil {
     private static List<Chip> typeBList;
     
     private static void populateList(){
+        typeRList = new LinkedList<Chip>();
+        typeBList = new LinkedList<Chip>();
         for(int i=0;i<boardSize;i++){
             for(int j=0;j<boardSize;j++){
                 if(isUsed(typeR, i, j)){
