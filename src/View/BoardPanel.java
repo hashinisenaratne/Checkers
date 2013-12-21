@@ -92,6 +92,7 @@ public final class BoardPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 BoardPanel.gameState = 0;
                 BoardPanel.boardPanel.repaint();
+                cb.reset();
             }
         });
         this.add(homeButton);        

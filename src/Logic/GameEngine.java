@@ -146,7 +146,10 @@ public class GameEngine {
         }
         System.out.println("Game Over");
         checkersFrame.setGameState(2);
-        redrawGUI();
+        redrawGUI();             
+        gameState = 0;
+        process();
+
     }
 
     public void takeMove(char type) {

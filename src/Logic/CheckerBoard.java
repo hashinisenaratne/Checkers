@@ -1048,6 +1048,48 @@ public int eval(char [][] board, char colour){
         }
         return score;
     }
+
+    public void reset() {
+        for (int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
+                if ((i + j) % 2 == 0) {
+                    checkersBoard[i][j] = empty;    //EMPTY cell
+                } else {
+                    checkersBoard[i][j] = invalid;
+                }
+            }
+        }
+        
+        typeBList.clear();
+        typeRList.clear();
+        
+        for (int i = 0; i < (boardSize / 2) - 1; i++) {
+            int j;
+            if (i % 2 == 0) {
+                j = 0;
+            } else {
+                j = 1;
+            }
+            while (j < boardSize) {
+                checkersBoard[i][j] = typeR;    //RED piece
+                typeRList.add(new Chip(j, i));
+                j += 2;
+            }
+        }
+        for (int i = boardSize - 1; i >= (boardSize) / 2 + 1; i--) {
+            int j;
+            if (i % 2 == 0) {
+                j = 0;
+            } else {
+                j = 1;
+            }
+            while (j < boardSize) {
+                checkersBoard[i][j] = typeB;     //BLACK piece
+                typeBList.add(new Chip(j, i));
+                j += 2;
+            }
+        }
+    }
 }
 
 
