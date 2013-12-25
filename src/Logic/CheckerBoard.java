@@ -996,8 +996,11 @@ int findValue(Node node, char colour, boolean isMin)
 int calcHeuristic(char[][] board, char colour)
 {
     //return new Random().nextInt(100);
-    //return HeuristicUtil.calcHeuristicValue(board, colour);
-    return eval(board, colour);
+    //if(pieceCount(typeR)>4 || pieceCount(typeB)>4){
+        return HeuristicUtil.calcHeuristicValue(board, colour);
+    //}
+    //return HeuristicUtil.calcHeuristicValueEnding(board, colour);
+    //return eval(board, colour);
 }
 
 final static int normal = 100;         //one checker worth 100
