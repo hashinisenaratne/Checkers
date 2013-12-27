@@ -37,9 +37,33 @@ public class HeuristicUtil {
     public static int calcHeuristicValue(char[][] board,char type) {
         checkersBoard=board;
         populateList();
-        HashMap<Character, Integer> map = calcBoardHeuristicValue3();
-        int heuristicValueR = map.get(typeR);
-        int heuristicValueB = map.get(typeB);
+        HashMap<Character, Integer> map=null;
+        int heuristicValueR=0;
+        int heuristicValueB=0;
+        if(!isOnlyKings()){
+            map = calcBoardHeuristicValue3();            
+            heuristicValueR = map.get(typeR);
+            heuristicValueB = map.get(typeB);
+        }else{
+            map=calcBoardHeuristicValueEnding1();
+            if(pieceCount(typeR)>pieceCount(typeB)){
+                if(type==typeR){
+                    heuristicValueR=map.get(typeB);
+                    heuristicValueB=map.get(typeR);
+                }else{
+                    heuristicValueR=map.get(typeR);
+                    heuristicValueB=map.get(typeB);
+                }
+            }else{
+                if(type==typeR){
+                    heuristicValueR=map.get(typeR);
+                    heuristicValueB=map.get(typeB);
+                }else{
+                    heuristicValueR=map.get(typeB);
+                    heuristicValueB=map.get(typeR);
+                }
+            }
+        }
         if (Character.toLowerCase(type) == Character.toLowerCase(typeR)) {
             return heuristicValueR - heuristicValueB;
         } else if (Character.toLowerCase(type) == Character.toLowerCase(typeB)) {
@@ -72,7 +96,7 @@ public class HeuristicUtil {
                         heuristicValueR += 5 + i;
                     }
                     if (isUsedByQueen(typeR, i, j)) {
-                        heuristicValueR += 5 + i + 2;
+                        heuristicValueR += 5 + i + 5;
                     }
                 }
             }
@@ -84,7 +108,7 @@ public class HeuristicUtil {
                         heuristicValueB += 5 + (7 - i);
                     }
                     if (isUsedByQueen(typeB, i, j)) {
-                        heuristicValueB += 5 + (7 - i) + 2;
+                        heuristicValueB += 5 + (7 - i) + 5;
                     }
                 }
             }
@@ -266,5 +290,16 @@ public static boolean isUsedByNormalPiece(char type, int row, int col) {
         }
         return count;
     }
-
+    public static boolean isOnlyKings(){
+        for (int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
+                if ((i + j) % 2 == 0) {
+                    if (isUsedByNormalPiece(typeR, i, j) || isUsedByNormalPiece(typeB, i, j) ) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
 }
