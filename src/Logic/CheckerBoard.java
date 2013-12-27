@@ -22,7 +22,7 @@ public class CheckerBoard {
     private List<Chip> typeRList;
     private List<Chip> typeBList;
     private int lastCutPieceRow,lastCutPieceCol;
-    private int maxDepth = 6;
+    private int maxDepth = 1;
 
     public CheckerBoard(int size) {
         boardSize = size;

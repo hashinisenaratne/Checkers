@@ -259,6 +259,7 @@ public final class BoardPanel extends JPanel {
             labelMovesR.setVisible(true);
             labelScoreB.setVisible(true);
             labelScoreR.setVisible(true);
+            homeButton.setVisible(true);
             g2d.drawImage(boardImg, 0, 0, null);
             updateChipInfo();
             

@@ -92,17 +92,22 @@ public class GameEngine {
             Thread.yield();
         }
         manualColour = checkersFrame.getPlayerColor();
+        cb.reset();
         gameState = 1;
     }
 
     public void process() {
         waitUntilGamestated();
         while (gameState != 2) {
+            if(checkersFrame.getGameState() < 1){
+                break;
+            }
             if(Character.toLowerCase(manualColour)!=cb.getTypeB()){ //manual color is red
                 if(!cb.hasMoves(cb.getTypeB())){
                     checkersFrame.setWin(false);
                     System.out.println("Red Wins");
                     gameState=2;
+                    checkersFrame.setGameState(2);
                     break;
                 }
                 else{
@@ -113,6 +118,7 @@ public class GameEngine {
                     checkersFrame.setWin(true);
                     System.out.println("Black Wins");
                     gameState=2;
+                    checkersFrame.setGameState(2);
                     break;
                 }
                 else{                    
@@ -126,6 +132,7 @@ public class GameEngine {
                     checkersFrame.setWin(false);
                     System.out.println("Red Wins");
                     gameState=2;
+                    checkersFrame.setGameState(2);
                     break;
                 }
                 else{                    
@@ -135,7 +142,8 @@ public class GameEngine {
                 if(!cb.hasMoves(cb.getTypeR())){
                     checkersFrame.setWin(true);
                     System.out.println("Black Wins");
-                    gameState=2;
+                    gameState=2;                    
+                    checkersFrame.setGameState(2);
                     break;
                 }
                 else{
@@ -144,8 +152,6 @@ public class GameEngine {
                 }
             }
         }
-        System.out.println("Game Over");
-        checkersFrame.setGameState(2);
         redrawGUI();             
         gameState = 0;
         process();
@@ -208,6 +214,9 @@ public class GameEngine {
     public void waitForUserMove(){
         while(!checkersFrame.isUserMoved()){
             Thread.yield();
+            if(checkersFrame.getGameState() < 1){
+                break;
+            }
         }
     }
 }
